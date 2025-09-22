@@ -1,0 +1,2 @@
+# Campylobacter at a wildlife–livestock–human interface in Uganda
+Campylobacter species are leading causes of bacterial gastroenteritis globally, but their diversity and transmission dynamics at wildlife–livestock–human interfaces are poorly understood. We investigated Campylobacter diversity across sympatric mountain gorillas, livestock, and humans in Uganda, and assessed its clinical relevance in humans.
