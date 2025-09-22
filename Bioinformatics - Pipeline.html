@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Valter Almeida">
+<meta name="author" content="Matthew A. Knox">
+<meta name="author" content="Kim M. Handley">
+<meta name="author" content="Anne C. Midwinter">
+<meta name="author" content="Patrick J. Biggs">
+<meta name="author" content="Agata H. Dziegiel">
+<meta name="author" content="Gladys Kalema-Zikusoka">
+<meta name="author" content="Stephen Rubanga">
+<meta name="author" content="Alex Ngabirano">
+<meta name="author" content="Willy A. Valdivia-Granda">
+<meta name="author" content="Hayley MacGregor">
+<meta name="author" content="Nigel P. French">
+<meta name="author" content="Alison E. Mather">
+<meta name="author" content="James O. Lloyd-Smith">
+<meta name="author" content="David T. S. Hayman">
+
+<title>Metagenomic analysis of Campylobacter at a wildlife–livestock–human interface in Uganda reveals novel species associated with human disease</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Bioinformatics - Pipeline_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Bioinformatics - Pipeline_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Bioinformatics - Pipeline_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Bioinformatics - Pipeline_files/libs/quarto-html/popper.min.js"></script>
+<script src="Bioinformatics - Pipeline_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Bioinformatics - Pipeline_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Bioinformatics - Pipeline_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Bioinformatics - Pipeline_files/libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Bioinformatics - Pipeline_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Bioinformatics - Pipeline_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Bioinformatics - Pipeline_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Metagenomic analysis of Campylobacter at a wildlife–livestock–human interface in Uganda reveals novel species associated with human disease</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>Valter Almeida </p>
+             <p>Matthew A. Knox </p>
+             <p>Kim M. Handley </p>
+             <p>Anne C. Midwinter </p>
+             <p>Patrick J. Biggs </p>
+             <p>Agata H. Dziegiel </p>
+             <p>Gladys Kalema-Zikusoka </p>
+             <p>Stephen Rubanga </p>
+             <p>Alex Ngabirano </p>
+             <p>Willy A. Valdivia-Granda </p>
+             <p>Hayley MacGregor </p>
+             <p>Nigel P. French </p>
+             <p>Alison E. Mather </p>
+             <p>James O. Lloyd-Smith </p>
+             <p>David T. S. Hayman </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="supplementary-materials" class="level3">
+<h3 class="anchored" data-anchor-id="supplementary-materials">Supplementary Materials:</h3>
+</section>
+<section id="bioinformatic-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="bioinformatic-analysis">Bioinformatic analysis</h3>
+<p>Bioinformatic analyses were performed on New Zealand eScience Infrastructure (NeSI) high-performance computing platforms. The sequencing data generated in this study have been deposited in the NCBI Sequence Read Archive (SRA) under the BioProject accession code PRJNA1213876.</p>
+<section id="quality-control" class="level4">
+<h4 class="anchored" data-anchor-id="quality-control">Quality control</h4>
+<p>Raw sequence reads were assessed for quality using FastQC (v0.11.9) to provide a preliminary quality report. This step was performed to identify potential issues, such as adapter contamination or low-quality bases, before trimming. Reads were trimmed to remove adapter sequences and low-quality bases using Trimmomatic (v0.39) to ensure high-quality data for downstream analysis. The key parameters used for trimming were:</p>
+<ul>
+<li><p><strong>PE</strong>: Paired-end reads were processed.</p></li>
+<li><p><strong>ILLUMINACLIP</strong>: Illumina adapter sequences were removed using a single mismatch tolerance (<code>1</code>), a minimum score of <code>30</code>, and a palindromic alignment length of <code>11</code>.</p></li>
+<li><p><strong>LEADING:10</strong>: Bases with a quality score below <code>10</code> were removed from the start of a read.</p></li>
+<li><p><strong>TRAILING:10</strong>: Bases with a quality score below <code>10</code> were removed from the end of a read.</p></li>
+<li><p><strong>MINLEN:80</strong>: Reads shorter than <code>80</code> bases were discarded after trimming.</p></li>
+<li><p><strong>HEADCROP:10</strong>: The first <code>10</code> bases were trimmed from the start of the read.</p></li>
+</ul>
+<p>The quality of the trimmed reads was re-evaluated using FastQC (v0.11.9) to confirm the effectiveness of the trimming process and to ensure the data was suitable for further analysis.</p>
+</section>
+</section>
+<section id="host-read-filtering" class="level3">
+<h3 class="anchored" data-anchor-id="host-read-filtering">Host read filtering</h3>
+<p>To remove host-derived reads and minimise contamination, all reads were mapped to their respective host reference genomes using BBMap (v38.95). Reference indexed files were built for each host:</p>
+<ul>
+<li><p><strong>Gorilla</strong>: <code>GCF_008122165.1_Kamilah_GGO_v0_genomic.fna</code></p></li>
+<li><p><strong>Human</strong>: <code>GCF_000001405.39_GRCh38.p13_genomic.fna</code></p></li>
+<li><p><strong>Cattle</strong>: <code>GCF_002263795.1_ARS-UCD1.2_genomic.fna</code></p></li>
+<li><p><strong>Goat</strong>: <code>GCF_001704415.1_ARS1_genomic.fna</code></p></li>
+</ul>
+<p>The key parameters used for host filtering were:</p>
+<ul>
+<li><p><strong><code>minid=0.95</code></strong>: Reads were filtered if they had a minimum identity of 95% to the host reference genome. This is a stringent threshold to ensure only reads highly likely to be from the host are removed.</p></li>
+<li><p><strong><code>maxindel=3</code></strong>: The maximum allowed number of insertions or deletions was set to 3. This helps account for minor sequencing errors or genetic variations.</p></li>
+<li><p><strong><code>bwr=0.16</code></strong> and <strong><code>bw=12</code></strong>: These parameters control the bandwidth, which influences how BBMap handles alignments with insertions or deletions, optimising performance.</p></li>
+<li><p><strong><code>quickmatch</code></strong>: This parameter enables a faster, less sensitive alignment mode, which is suitable for high-stringency host filtering.</p></li>
+<li><p><strong><code>fast</code></strong>: Another parameter that enables faster mapping at the cost of some sensitivity, which is acceptable when the goal is to remove highly similar host reads.</p></li>
+<li><p><strong><code>minhits=2</code></strong>: Reads were required to have a minimum of two hits to the reference genome to be considered for filtering.</p></li>
+<li><p><strong><code>qtrim=rl</code></strong> and <strong><code>trimq=10</code></strong>: Low-quality bases at the ends of reads were trimmed before mapping to improve alignment accuracy.</p></li>
+<li><p><strong><code>untrim</code></strong>: This ensures that even if part of a read is trimmed, the entire original read is retained if it passes the filtering criteria.</p></li>
+</ul>
+<p>An example of the script used for human samples is below:</p>
+<hr>
+<pre><code>module load BBMap/38.95-gimkl-2020a
+
+for file in *_R1.trim.fastq.gz
+  do
+    base=$(basename ${file} _R1.trim.fastq.gz)
+    srun bbmap.sh in1=${file} in2=${base}_R2.trim.fastq.gz -Xmx27g -t=20 \
+    minid=0.95 maxindel=3 bwr=0.16 bw=12 quickmatch fast minhits=2 qtrim=rl trimq=10 untrim \
+    path=/nesi/project/massey03212/AGRF/AGRF_CAGRF21098330_H3CGTDSX3/Trimmomatic/bbmap/Human_ref \
+    out1=/nesi/project/massey03212/AGRF/AGRF_CAGRF21098330_H3CGTDSX3/Trimmomatic/bbmap/Human_community/host_filtered_reads/${base}_R1_hostFilt.fastq.gz out2=/nesi/project/massey03212/AGRF/AGRF_CAGRF21098330_H3CGTDSX3/Trimmomatic/bbmap/Human_community/host_filtered_reads/${base}_R2_hostFilt.fastq.gz
+done</code></pre>
+<hr>
+</section>
+<section id="metagenomic-assembly" class="level3">
+<h3 class="anchored" data-anchor-id="metagenomic-assembly">Metagenomic assembly</h3>
+<p>Following host-read filtering, the remaining reads were assembled into contigs using MEGAHIT (v1.2.9). Both individual sample assemblies and co-assemblies were performed to maximise the recovery of high-quality metagenome-assembled genomes (MAGs).</p>
+<p>The key parameters used for assembly were:</p>
+<ul>
+<li><p><strong>-1 and -2</strong>: These parameters specified the paired-end read files for the forward and reverse reads.</p></li>
+<li><p><strong>-o</strong>: This defined the output directory for the assembly results.</p></li>
+</ul>
+<p>To automate the assembly of each individual sample, a SLURM array job was used. This approach allowed for the parallel processing of multiple samples, with each array task (<code>$SLURM_ARRAY_TASK_ID</code>) processing a single sample’s paired-end reads.</p>
+<p>An example of the script used for a single sample assembly via the array job is shown below:</p>
+<hr>
+<pre><code>module load MEGAHIT/1.2.9-gimkl-2022a-Python-3.10.5
+
+# Get the list of FASTA files and select the one corresponding to the current array job index
+fastq_files=("$INPUT_DIR"/*_R1_hostFilt.fastq.gz)
+fastq_file_R1="${fastq_files[$SLURM_ARRAY_TASK_ID]}"
+fastq_file_R2="${fastq_file_R1/_R1/_R2}"
+
+# Extract the base name of the file (without the directory and extension)
+base_name=$(basename "$fastq_file_R1" _R1_hostFilt.fastq.gz)
+
+# Run MEGAHIT
+megahit -1 ${fastq_file_R1} -2 ${fastq_file_R2} -o ${OUTPUT_DIR}/${base_name}_megahit_out</code></pre>
+<hr>
+<p>Contigs with a length of less than 1,000 bp were filtered out using seqmagick (v0.8.4). This step was performed to remove short, potentially erroneous contigs and improve the quality of the final assembly.</p>
+<p>The key parameters used were:</p>
+<ul>
+<li><p><code>convert</code>: This subcommand was used to perform a conversion on the input file.</p></li>
+<li><p><code>--min-length 1000</code>: This parameter specified that only contigs with a minimum length of 1,000 base pairs were retained.</p></li>
+</ul>
+<p>An example of the script used is shown below:</p>
+<hr>
+<pre><code>module load seqmagick/0.8.4-gimkl-2020a-Python-3.8.2
+
+seqmagick convert --min-length 1000 final.contigs.fa Hc.m1000.fna</code></pre>
+<hr>
+</section>
+<section id="read-mapping-and-sorting" class="level3">
+<h3 class="anchored" data-anchor-id="read-mapping-and-sorting">Read mapping and sorting</h3>
+<p>Following contig filtering, the host-filtered reads were mapped back to their corresponding assembled contigs. This was a two-step process using Bowtie2 (v.2.5.4) and SAMtools (v.1.9).</p>
+<p>First, a Bowtie2 index was built for each sample’s filtered contigs.</p>
+<hr>
+<pre><code>module load Bowtie2/2.5.4-GCC-12.3.0
+
+bowtie2-build --threads $SLURM_CPUS_PER_TASK "samplename".m1000.fna "samplename"_bt2</code></pre>
+<hr>
+<p>Next, reads were mapped to the indexed contigs. The key parameters used for mapping were:</p>
+<ul>
+<li><p><code>--minins 200</code> and <code>--maxins 800</code>: These parameters set the minimum and maximum insert sizes for valid paired-end alignments, ensuring that only reads from appropriately sized fragments were considered.</p></li>
+<li><p><code>--sensitive</code>: This preset was used to ensure high mapping sensitivity, optimising for a high alignment rate.</p></li>
+<li><p><code>--threads $SLURM_CPUS_PER_TASK</code>: This specified the number of threads to use, enabling parallel processing.</p></li>
+<li><p><code>-x</code>: This parameter specified the name of the Bowtie2 index to use for mapping.</p></li>
+<li><p><code>-1</code> and <code>-2</code>: These specified the paired-end read files.</p></li>
+<li><p><code>-S</code>: The output file was saved in SAM format, which was then converted to BAM.</p></li>
+</ul>
+<hr>
+<pre><code>module load Bowtie2/2.5.4-GCC-12.3.0
+
+bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x Hc_bt2 -1 Hc_R1_hostFilt.fastq.gz -2 Hc_R2_hostFilt.fastq.gz -S Hc.bam</code></pre>
+<hr>
+<p>Finally, the output BAM file was sorted and indexed using SAMtools (v1.9) to prepare it for subsequent analyses, such as abundance estimation and genome binning.</p>
+<hr>
+<pre><code>module load SAMtools/1.9-GCC-7.4.0
+
+samtools sort -@ $SLURM_CPUS_PER_TASK Hc.bam -o Hc.sorted.bam
+samtools index -@ $SLURM_CPUS_PER_TASK Hc.sorted.bam</code></pre>
+<hr>
+<p>Following read mapping, contigs were binned into MAGs using CONCOCT, MetaBAT2, and MaxBin2. A consensus approach was taken by running all three binning tools independently to maximize the recovery of high-quality bins.</p>
+<p>CONCOCT (v1.1.0) was used to cluster contigs into bins based on both coverage and composition. The pipeline involved the following steps:</p>
+<ul>
+<li><p><strong><code>cut_up_fasta.py</code></strong>: This script was used to split the assembled FASTA files into 10 kb fragments. This fragmentation is a required step for CONCOCT’s binning algorithm.</p></li>
+<li><p><strong><code>concoct_coverage_table.py</code></strong>: This script created a coverage table from the sorted BAM files, which is used by CONCOCT to determine the abundance of each contig fragment across the samples.</p></li>
+<li><p><strong><code>concoct</code></strong>: The main CONCOCT program was then run using the composition and coverage files to perform the binning.</p></li>
+<li><p><strong><code>merge_cutup_clustering.py</code></strong>: This script merged the clustered fragments back into full-length contigs.</p></li>
+<li><p><strong><code>extract_fasta_bins.py</code></strong>: This final script extracted the full-length contigs for each bin into separate FASTA files.</p></li>
+</ul>
+<hr>
+<pre><code>module load CONCOCT/1.1.0-gimkl-2020a-Python-3.8.2
+
+# Example script for a single sample
+cut_up_fasta.py "sample_name.m1000.fna" -c 10000 -o 0 --merge_last -b "sample_name_10K.bed" &gt; "sample_name_10K.fa"
+concoct_coverage_table.py "sample_name_10K.bed" "sample_name.sorted.bam" &gt; "coverage_table_sample_name.tsv"
+concoct --composition_file "sample_name_10K.fa" \
+        --coverage_file "coverage_table_sample_name.tsv" \
+        -b "concoct_output/sample_name_concoct_output/"
+merge_cutup_clustering.py "concoct_output/sample_name_concoct_output/clustering_gt1000.csv" &gt; \
+                            "concoct_output/sample_name_concoct_output/clustering_merged.csv"
+extract_fasta_bins.py "sample_name.m1000.fna" \
+                        "concoct_output/sample_name_concoct_output/clustering_merged.csv" \
+                        --output_path "concoct_output/sample_name_concoct_output/fasta_bins"</code></pre>
+<hr>
+<hr>
+<p>MetaBAT2 (v2.17) was used to bin contigs based on their coverage and tetranucleotide frequencies. Read depth for each contig was first calculated from the sorted BAM file.</p>
+<pre><code>module load MetaBAT/2.17-GCC-12.3.0
+
+# Calculate contig depth
+jgi_summarize_bam_contig_depths --outputDepth "metabat_depth.txt" "sample_name.sorted.bam"
+
+# Run MetaBAT2
+metabat2 -t $SLURM_CPUS_PER_TASK -m 1500 \
+         -i "sample_name.m1000.fna" \
+         -a "metabat_depth.txt" \
+         -o "metabat_bins/sample_name_metabat"</code></pre>
+<hr>
+<p>The key parameters were:</p>
+<ul>
+<li><p><strong>-m 1500</strong>: This option set the minimum contig length to 1,500 bp, ensuring that only longer, more reliable contigs were included in the binning process.</p></li>
+<li><p><strong>-i</strong>: The input file of contigs to be binned.</p></li>
+<li><p><strong>-a</strong>: The file containing contig abundance and depth information.</p></li>
+<li><p><strong>-o</strong>: The base output name for the generated bins.</p></li>
+</ul>
+<hr>
+<hr>
+<p>MaxBin2 (v2.2.7) was used as a third binning method. The contig abundance file from the MetaBAT2 step was prepared for use with MaxBin2.</p>
+<pre><code>module load MaxBin/2.2.7-GCC-11.3.0-Perl-5.34.1
+
+# Prepare abundance file
+cut -f1,4,6,8,10 "metabat_depth.txt" &gt; "maxbin_abundance.txt"
+
+# Run MaxBin2
+run_MaxBin.pl -thread $SLURM_CPUS_PER_TASK -min_contig_length 1500 \
+              -contig "sample_name.m1000.fna" \
+              -abund "maxbin_abundance.txt" \
+              -out "maxbin_bins/sample_name_maxbin"</code></pre>
+<hr>
+<p>The key parameters were:</p>
+<ul>
+<li><p><strong>-min_contig_length 1500</strong>: This parameter set the minimum contig length to 1,500 bp, matching the threshold used in MetaBAT2.</p></li>
+<li><p><strong>-contig</strong>: The input file containing the assembled contigs.</p></li>
+<li><p><strong>-abund</strong>: The file containing contig abundance data.</p></li>
+<li><p><strong>-out</strong>: The base output name for the generated bins.</p></li>
+</ul>
+<p>To consolidate the results from the different binning algorithms and obtain a high-quality set of non-redundant bins, DAS Tool (v1.1.5) was used. This process involved two main steps: first, creating a file that associated each contig with its corresponding bin for each binning method; and second, running DAS Tool to select the best bins based on quality metrics like completeness and contamination.</p>
+<p>For each binning method, a text file was created that associated every contig with its respective bin. An example of the commands used for MetaBAT2 is provided below. The same approach was applied to MaxBin2 and CONCOCT.</p>
+<hr>
+<pre><code>for bin_path in metabat/*.fa;
+do
+    bin_name=$(basename ${bin_path} .fa)
+
+    grep "&gt;" ${bin_path} | sed 's/&gt;//g' | sed "s/$/\t${bin_name}/g" &gt;&gt; metabat_associations.txt
+done</code></pre>
+<hr>
+<p>The association files from all three binning methods were then used as input for DAS Tool. The software selected the best representative bins from each set, resulting in a high-quality, consolidated set of MAGs.</p>
+<p>The key parameters used were:</p>
+<ul>
+<li><p><code>-i</code>: This parameter specified the input association files from the different binning tools.</p></li>
+<li><p><code>-l</code>: This provided labels for each of the input binning methods (e.g., MetaBAT, MaxBin, Concoct).</p></li>
+<li><p><code>-t</code>: This set the number of threads for parallel processing.</p></li>
+<li><p><code>--write_bins</code>: This option generated the final consolidated bins as a new set of FASTA files.</p></li>
+<li><p><code>-c</code>: This specified the input contigs file, which was used by DAS Tool to determine bin quality.</p></li>
+<li><p><code>-o</code>: This defined the output directory for the final results.</p></li>
+</ul>
+<hr>
+<pre><code>module load DAS_Tool/1.1.5-gimkl-2022a-R-4.2.1
+
+# Run DAS_Tool
+DAS_Tool -i metabat_associations.txt,maxbin_associations.txt,concoct_associations.txt \
+         -l MetaBAT,MaxBin,Concoct \
+         -t 2 --write_bins --search_engine diamond \
+         -c all_bins/Cattle.m1000.fna \
+         -o dastool_out/</code></pre>
+<hr>
+<p>To assess the quality of the final consolidated bins, CheckM2 (v1.0.1) was used. This software predicts the completeness and contamination of the MAGs, as well as other general characteristics such as genome size and GC content, which are key metrics for determining their quality.</p>
+<p>The key parameters used were:</p>
+<ul>
+<li><p><code>predict</code>: This subcommand was used to predict the quality of the bins.</p></li>
+<li><p><code>--threads</code>: The number of threads used for parallel processing.</p></li>
+<li><p><code>--extension</code>: This specified the file extension of the input bins (e.g., <code>.fa</code>).</p></li>
+<li><p><code>--input</code>: The directory containing the input bin files.</p></li>
+<li><p><code>--output-directory</code>: The directory where the CheckM2 results were saved.</p></li>
+<li><p><code>--force</code>: This option forced the analysis to overwrite any existing output.</p></li>
+</ul>
+<hr>
+<pre><code>module load CheckM2/1.0.1-Miniconda3
+
+# Run CheckM2 to assess MAG quality
+checkm2 predict \
+    --threads $SLURM_CPUS_PER_TASK \
+    --extension fa \
+    --input "Campylobacter_sp900" \
+    --output-directory "checkm_out" \
+    --force &gt; checkm_results.tsv</code></pre>
+<hr>
+<p>Then, dRep (v3.4.2), Mash (v.2.3) and CheckM2 (v.1.0.1) were used to dereplicate the bins and create a final dataset of unique MAGs. This step is crucial for removing redundant or highly similar genomes from the combined binning results. The <em>Campylobacter</em> MAGs obtained from this step were then selected for downstream analysis.</p>
+<p>The key parameters used for this process were:</p>
+<ul>
+<li><p><code>-g</code>: This specified the directory containing all the input FASTA files from the binning and consolidation steps.</p></li>
+<li><p><code>-p</code>: This set the number of CPU threads for parallel processing.</p></li>
+<li><p><code>--genomeInfo</code>: This provided a file containing genome quality metrics (e.g., from CheckM2), which dRep uses to select the highest-quality genome from a cluster of similar genomes.</p></li>
+<li><p><code>-str 100</code>: This specified that all genomes were to be compared, regardless of whether they belonged to the same species, by setting the primary clustering strategy to <code>100</code> (meaning, <code>100%</code> of genomes should be considered in the all-vs-all comparison).</p></li>
+<li><p><code>-pa 0.95</code>: The primary average nucleotide identity (ANI) threshold was set to <code>95%</code>. Genomes were clustered if their ANI was above this threshold.</p></li>
+<li><p><code>-sa 0.99</code>: The secondary ANI threshold was set to <code>99%</code> for final clustering, ensuring that the final representative MAGs were at least <code>99%</code> identical to their cluster members.</p></li>
+</ul>
+<hr>
+<pre><code>module load CheckM2/1.0.1-Miniconda3
+module load drep/3.4.2-gimkl-2022a-Python-3.10.5
+module load Mash/2.3-GCC-12.3.0
+
+dRep dereplicate dRep_output/ -p $SLURM_CPUS_PER_TASK --genomeInfo dRep.genomeInfo -g ../03_Quality_MAGs/*.fa -str 100 -pa 0.95 -sa 0.99</code></pre>
+<hr>
+<p><strong>Publicly available genome download</strong></p>
+<p>Publicly available <em>Campylobacter</em> genomes were downloaded from NCBI to serve as a reference dataset for phylogenetic and comparative genomic analyses. This was a multi-step process.</p>
+<p>First, the latest bacterial taxonomy file was downloaded from the GTDB database. Then, a script was used to select a single accession for each unique <em>Campylobacter</em> species (<strong>s__</strong>), which ensured that the final dataset contained only one representative genome per species.</p>
+<hr>
+<pre><code># Download the latest GTDB bacterial taxonomy metadata file
+wget https://data.ace.uq.edu.au/public/gtdb/data/releases/latest/bac120_taxonomy.tsv.gz
+gunzip bac120_taxonomy.tsv.gz
+
+# Select one genome per species from the GTDB taxonomy file
+awk -F'\t|;' '$8 ~ /^s__Campylobacter(_[A-Z]+)? / {if (!seen[$8]++) print $1}' bac120_taxonomy.tsv | sed 's/^[A-Z]*_//' &gt; 02_Campylobacter_accession_references.txt
+
+# Create a directory to store the downloaded genomes
+mkdir -p downloaded_genomes
+
+# Loop through each accession and download the genome from NCBI's FTP server
+list_file="02_campylobacter_accession_references.txt"
+while read accession; do
+    url="https://ftp.ncbi.nlm.nih.gov/genomes/all/${accession:0:3}/${accession:4:3}/${accession:7:3}/${accession:10:3}/"
+    filename=$(curl -s "$url" | grep -oP "href=\"${accession}.*?_genomic.fna.gz\"" | head -n 1 | cut -d '"' -f 2)
+    if [ ! -z "$filename" ]; then
+        wget "${url}/${filename}" -O "downloaded_genomes/${accession}_genomic.fna.gz"
+    else
+        echo "No assembly found for accession: $accession"
+    fi
+done &lt; "$list_file"
+
+# Clean up temporary files
+rm temp*
+rm *.html
+gunzip downloaded_genomes/*.fna.gz
+
+# Remove headers and ensure correct FASTA format for each downloaded genome
+for i in downloaded_genomes/*.fna; do
+    file_base=$(basename "${i}" .fna)
+    sed 's/ .*//g' "${i}" &gt; "downloaded_genomes/${file_base}.fa"
+done</code></pre>
+<hr>
+</section>
+<section id="taxonomic-classification" class="level3">
+<h3 class="anchored" data-anchor-id="taxonomic-classification">Taxonomic classification</h3>
+<p>Then, GTDB-Tk (v2.4.0) was used for taxonomic classification and multiple sequence alignment.</p>
+<p>The key parameters used for this analysis were:</p>
+<ul>
+<li><p><strong><code>classify_wf</code></strong>: This subcommand initiated the main workflow for classifying genomes and performing multiple sequence alignment.</p></li>
+<li><p><strong><code>-x fa</code></strong>: This specified the input file format as FASTA.</p></li>
+<li><p><strong><code>--cpus</code></strong>: This set the number of CPU threads for parallel processing.</p></li>
+<li><p><strong><code>--skip_ani_screen</code></strong>: This parameter was used to skip the average nucleotide identity (ANI) screening step, which can speed up the classification process.</p></li>
+<li><p><strong><code>--genome_dir</code></strong>: This provided the path to the directory containing all the input MAGs and reference genomes.</p></li>
+<li><p><strong><code>--out_dir</code></strong>: This defined the output directory for the results.</p></li>
+</ul>
+<hr>
+<pre><code>module load GTDB-Tk/2.4.0-foss-2023a-Python-3.11.6
+
+gtdbtk classify_wf -x fa --cpus $SLURM_CPUS_PER_TASK --skip_ani_screen --genome_dir /n</code></pre>
+<hr>
+<p>After taxonomic classification and multiple sequence alignment, a phylogenetic tree was inferred using IQ-TREE2 (v2.2.2.2). Branch support was assessed with 1000 ultrafast bootstrap replicates and the phylogenetic tree was visualised and annotated using the Interactive Tree of Life (iTOL v6).</p>
+<p>The key parameters used were:</p>
+<ul>
+<li><p><code>-s</code>: This specified the input multiple sequence alignment file.</p></li>
+<li><p><code>-T</code>: This set the number of CPU threads for parallel processing.</p></li>
+<li><p><code>-mem 8GB</code>: This allocated 8 GB of memory for the analysis.</p></li>
+<li><p><code>-m TEST</code>: This option automatically selected the best-fit substitution model for the data, which is crucial for accurate phylogenetic inference.</p></li>
+<li><p><code>-b 1000</code>: This performed 1,000 ultrafast bootstrap replicates to assess the robustness of the tree branches.</p></li>
+</ul>
+<hr>
+<pre><code>module load IQ-TREE/2.2.2.2-gimpi-2022a
+
+iqtree2 -s gtdbtk.bac120.user_msa.fasta.gz -T $SLURM_CPUS_PER_TASK -mem 8GB -m TEST -b 1000</code></pre>
+<hr>
+</section>
+<section id="genome-coverage-and-abundance-normalisation" class="level3">
+<h3 class="anchored" data-anchor-id="genome-coverage-and-abundance-normalisation">Genome coverage and abundance normalisation</h3>
+<p>Genome coverage and relative abundance were determined by mapping host-filtered reads to the final set of unique MAGs. This process involved read mapping, sorting, coverage calculation, and subsequent normalisation.</p>
+<section id="read-mapping-and-read-counting" class="level4">
+<h4 class="anchored" data-anchor-id="read-mapping-and-read-counting">Read mapping and read counting</h4>
+<p>Host-filtered reads were first mapped to the final set of MAGs using Bowtie2 (v2.5.4). The resulting alignment files were then converted to BAM format, sorted, and indexed using SAMtools (v1.21).</p>
+<p>Once the BAM files were sorted, MetaBAT2 (v2.15) was used to calculate the per-sample coverage statistics for each contig within the MAGs. The number of mapped reads was also extracted using SAMtools.</p>
+<p>An example of the combined script used for this process is below:</p>
+<hr>
+<pre><code>module load Bowtie2/2.5.4-GCC-12.3.0
+module load SAMtools/1.21-GCC-12.3.0
+module load MetaBAT/2.15-GCC-11.3.0
+
+# Define a single sample name for clarity in this example
+sample_name="UG_DNA_sampleA"
+
+# Map reads to MAGs using Bowtie2 and pipe the output to SAMtools for conversion and sorting
+# '-S -' tells samtools to expect input from a pipe
+bowtie2 -x "campy_index" -1 "${sample_name}_R1.fastq.gz" -2 "${sample_name}_R2.fastq.gz" | \
+samtools view -bS - &gt; "${sample_name}.bam"
+
+# Sort the BAM file
+samtools sort -o "${sample_name}.sorted.bam" "${sample_name}.bam"
+
+# Remove the unsorted BAM file to save space
+rm "${sample_name}.bam"
+
+# Calculate contig depth with MetaBAT2's helper script
+jgi_summarize_bam_contig_depths --outputDepth bins_cov_table.txt mapped/*.bam</code></pre>
+<hr>
+<p>The relative abundance of each <em>Campylobacter</em> species was then calculated by normalising the number of reads mapped to their best-quality MAGs (and all unique MAGs per species) by the total sequencing depth of each sample and the length of the corresponding MAGs.</p>
+<p><strong>Genome coverage normalisation</strong></p>
+<p>Following the initial coverage and abundance calculations, a custom Python script, <strong>norm_jgi_cov_table.py</strong>, was used to normalise the coverage values. This script corrected for variations in sequencing depth between samples, ensuring that abundance comparisons were robust.</p>
+<p>The script normalises the average fold coverage for contigs based on the output from <code>jgi_summarize_bam_contig_depths</code>. It achieves this by first retrieving the per-sample read depths from the <code>bowtie2</code> standard error output and then adjusting the coverage values accordingly. This produces a final, normalised coverage table suitable for downstream analysis.</p>
+<hr>
+<hr>
+<p><strong>Script: <code>norm_jgi_cov_table.py</code></strong></p>
+<p>Python</p>
+<pre><code>#!/usr/bin/env python
+
+# norm_jgi_cov_table.py
+## Calculate normalised average fold coverage for contigs based on output from jgi_summarize_bam_contig_depths
+## Per-sample read depths are retrieved from the standard error output of the prior bowtie2 read mapping
+
+# Required parameters: 
+## --cov_table (-c) cov_table.txt : coverage table output from jgi_summarize_bam_contig_depths
+## --bowtie2_err (-e) mapping.err : output file of captured standard error output from bowtie2 read mapping
+
+# Optional parameters:
+## --output_path (-o) output_directory : Path for output directory. Default = './'
+
+####################
+# Importing libraries and setting input arguments
+####################
+
+# import packages
+from argparse import ArgumentParser
+import os
+import pandas as pd
+import numpy as np
+import re
+
+# Set arguments
+parser = ArgumentParser()
+parser.add_argument("-c", "--cov_table", dest="cov_table_in",
+                    help="Coverage table output from jgi_summarize_bam_contig_depths",
+                    metavar='cov_table', required=True)
+parser.add_argument("-e", "--bowtie2_err", dest="bowtie2_err_in",
+                    help="Output file of captured standard error output from bowtie2 read mapping",
+                    metavar='bowtie2_err', required=True)
+parser.add_argument("-o", "--output_path", dest="out_path",
+                    help="Path/to/output/directory/. Default = current directory",
+                    metavar='output_path', default='./')
+args = parser.parse_args()
+
+####################
+# Main script
+####################
+
+print("\nRunning norm_jgi_cov_table.py\r\n")
+
+## Calculate average reads/sample (library size)
+
+# Generate empty list of read counts and add results for each sample via looping over the relevant lines in bowtie2_err
+read_counts = []
+with open(args.bowtie2_err_in, 'r') as readfile:
+    for line in readfile:
+        if "reads; of these:" in line:
+            sample_read_count = int(re.sub(r'(\d+).*', r'\1', line))
+            read_counts.append(sample_read_count)
+
+# Calculate average library size
+avg_read_counts = round(sum(read_counts) / len(read_counts))
+
+## Calculate normalised coverage per sample and generate normalised count table
+
+# covstats.txt files
+# files = [entry.path for entry in filepath if '.covstats.txt' in entry.name]
+
+# Read in coverage table
+cov_table = pd.read_csv(args.cov_table_in, sep='\t')
+
+# For each column that ends in .bam (the coverage values for each sample), normalise values by: coverage value / sample read count (from read_counts list) * avg_read_counts
+i=0
+for column in cov_table.columns[cov_table.columns.str.endswith('bam')]:
+    cov_table.loc[:, column] = round((cov_table.loc[:, column] / read_counts[i]) * avg_read_counts, 4)
+    i += 1
+
+# Subset cov_table to retain only the columns of interest
+cov_table = cov_table.loc[:, (['contigName', 'contigLen'] + cov_table.columns[cov_table.columns.str.endswith('bam')].tolist())]
+
+# Write output table to file
+cov_table.to_csv(args.out_path+'normalised_'+args.cov_table_in, sep='\t', index=False)
+
+print("Output:\r\n")
+print(args.out_path+'normalised_'+args.cov_table_in+' : coverage table output from jgi_summarize_bam_contig_depths, normalised by average sample read depth.\r\n')
+print("Completed norm_jgi_cov_table.py\r\n")
+
+####################
+# END
+####################</code></pre>
+<hr>
+</section>
+</section>
+<section id="gene-prediction-and-functional-annotation" class="level3">
+<h3 class="anchored" data-anchor-id="gene-prediction-and-functional-annotation">Gene prediction and functional annotation</h3>
+<p>Gene prediction was carried out using Prodigal (v2.6.3), which identified protein-coding genes in the assembled MAGs. Prokka (v1.14.5) was used as a rapid annotation tool that generates GFF files, which were subsequently used for downstream analyses. The <code>groL</code> gene from our annotated MAGs and publicly available reference genomes was aligned using MAFFT (v7.450). This multiple sequence alignment was then imported into Geneious (v10.6.2). Primers from a previous study were mapped to the <code>groL</code> alignment using Geneious’s live annotation tool. This process was performed in silico to test for the cross-reactivity of the primers with the <code>groL</code> gene across the diverse <em>Campylobacter</em> species in our dataset.</p>
+<p>Prodigal was run on each MAG to predict genes, creating a gene file in FASTA format (<code>.fna</code>), an amino acid file in FASTA format (<code>.faa</code>), and a GenBank format file (<code>.gbk</code>). The <code>-p single</code> parameter was used to ensure that the gene prediction was optimised for single, un-concatenated genomes.</p>
+<hr>
+<pre><code>module load prodigal/2.6.3-GCCcore-7.4.0
+
+# Working directory
+cd /nesi/nobackup/massey03212/Nat_comms/Genomic_analysis/10_Metabolic_functions/03_gene_prediction
+
+# Output directory
+mkdir -p predictions/
+
+# List of all MAGs (full paths)
+bin_list=(/nesi/nobackup/massey03212/Nat_comms/Genomic_analysis/10_Metabolic_functions/Mags_refs/*.fa)
+
+# Get the file for this SLURM array task
+bin_file=${bin_list[$SLURM_ARRAY_TASK_ID]}
+pred_file=$(basename "$bin_file" .fa)
+
+# Run prodigal
+prodigal -i "$bin_file" -p single \
+         -d predictions/"${pred_file}".genes.fna \
+         -a predictions/"${pred_file}".genes.faa \
+         -o predictions/"${pred_file}".genes.gbk</code></pre>
+<hr>
+<p>The following Prokka script was used to automate the annotation of each FASTA file.</p>
+<hr>
+<pre><code>module load prokka/1.14.5-GCC-11.3.0
+module load tbl2asn/20230926
+
+INPUT_DIR="/nesi/nobackup/massey03212/Nat_comms/Genomic_analysis/10_Metabolic_functions/Mags_refs"
+OUTPUT_DIR="/nesi/nobackup/massey03212/Nat_comms/Genomic_analysis/10_Metabolic_functions/02_Prokka"
+
+mkdir -p "$OUTPUT_DIR"
+
+for file in "${INPUT_DIR}"/*.fa; do
+    base=$(basename "${file}" .fa)
+    outdir="${OUTPUT_DIR}/${base}_output"
+
+    prokka "${file}" \
+        --prefix "${base}" \
+        --outdir "${outdir}" \
+        --cpus "$SLURM_CPUS_PER_TASK"
+done</code></pre>
+<hr>
+</section>
+<section id="comparative-genomics" class="level3">
+<h3 class="anchored" data-anchor-id="comparative-genomics">Comparative genomics</h3>
+<section id="average-nucleotide-identity-ani" class="level4">
+<h4 class="anchored" data-anchor-id="average-nucleotide-identity-ani"><strong>Average Nucleotide Identity (ANI)</strong></h4>
+<p>ANI comparisons between all MAGs and publicly available genomes were performed with FastANI (v1.33). This tool provides a measure of genomic similarity, with values above 95% often used to delineate species boundaries. The following parameters were used to ensure a comprehensive all-vs-all comparison:</p>
+<ul>
+<li><p><code>--minFraction 0.1</code>: This required a minimum of 10% of the query genome to have a match in the reference genome, which helped to filter out false alignments.</p></li>
+<li><p><code>--fragLen 1000</code>: This set the fragment length for alignment to 1,000 bp, which is an optimal length for accurate ANI calculation.</p></li>
+</ul>
+<hr>
+<pre><code>module load FastANI/1.33-intel-2022a
+
+# Paths
+GENOME_DIR="/nesi/nobackup/massey03212/Nat_comms/Genomic_analysis/02_gtdbtk/new_dataset_corrected"
+OUTPUT="fastani_results.tsv"
+GENOME_LIST="genome_list.txt"
+
+# Generate genome list with absolute paths
+find "$GENOME_DIR" -type f \( -name "*.fa" -o -name "*.fna" -o -name "*.fasta" \) -exec realpath {} \; &gt; "$GENOME_LIST"
+
+# Read genomes into array
+mapfile -t GENOMES &lt; "$GENOME_LIST"
+NUM_GENOMES=${#GENOMES[@]}
+
+# Create output directory for temp files
+mkdir -p tmp_results
+
+# Main ANI calculation loop
+for (( i=0; i&lt;NUM_GENOMES; i++ )); do
+  for (( j=i; j&lt;NUM_GENOMES; j++ )); do
+    OUT_FILE="tmp_results/ani_${i}_${j}.txt"
+    if ! fastANI -q "${GENOMES[$i]}" \
+                 -r "${GENOMES[$j]}" \
+                 --minFraction 0.1 \
+                 --fragLen 1000 \
+                 -o "$OUT_FILE" 2&gt;&gt; fastani_errors.log
+    then
+      echo "ERROR comparing ${GENOMES[$i]} vs ${GENOMES[$j]}" &gt;&gt; fastani_errors.log
+      touch "$OUT_FILE"
+    fi
+  done
+done
+
+# Combine results
+cat tmp_results/*.txt &gt; "$OUTPUT"</code></pre>
+<hr>
+</section>
+</section>
+<section id="virulence-and-antibiotic-resistance-gene-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="virulence-and-antibiotic-resistance-gene-analysis">Virulence and antibiotic resistance gene analysis</h3>
+<p>To identify genes conferring antibiotic resistance and virulence, Abricate (v1.0.0) was used. This tool screens contigs for the presence of target genes from various databases, providing a rapid and comprehensive assessment. The analysis was conducted against the ResFinder database for antibiotic resistance genes and the VFDB (Virulence Factor Database) for virulence genes.</p>
+<p>The key parameters used for this process were:</p>
+<ul>
+<li><p><code>--db</code>: This specified the database to be used for the screen.</p></li>
+<li><p><code>*.fa</code>: This wildcard was used to process all FASTA files in the input directory.</p></li>
+</ul>
+<hr>
+<pre><code>module load ABRicate/1.0.0-GCC-11.3.0-Perl-5.34.1
+
+# Set working and output directories
+WORKDIR=/nesi/nobackup/massey03212/Nat_comms/Genomic_analysis/06_Abricate/Campylobacter_infans
+OUTDIR=/nesi/nobackup/massey03212/Nat_comms/Genomic_analysis/06_Abricate/Campylobacter_infans
+
+# Create output directory if it doesn't exist
+mkdir -p "$OUTDIR"
+
+# Move to working directory
+cd "$WORKDIR"
+
+# Run ABRicate and save outputs to OUTDIR
+abricate --db resfinder *.fa &gt; "$OUTDIR/resfinder.tsv"
+abricate --db vfdb *.fa &gt; "$OUTDIR/vfdb.tsv"</code></pre>
+<hr>
+<p>Comparative alignments to the <em>C. jejuni</em> reference genome (GTDB ID GCA_000009085.1; NCTC11168) were conducted using MUMmer (v4.0). This pipeline was designed to identify, filter, and combine shared regions between the MAGs and the reference genome.</p>
+<p>Initially, <strong><code>dnadiff</code></strong> was used to perform a whole-genome alignment between the MAGs and the reference genome. The resulting delta file was then filtered to retain only the best-filtered alignments, removing redundant or poor-quality matches. The <strong><code>show-coords</code></strong> command was used to generate a tabular file summarising the alignment coordinates.</p>
+<p>Example:</p>
+<hr>
+<pre><code>## MUMmer - Pipeline:
+
+dnadiff -p C_vicugnae_vs_cjejuni GCA_000009085.1_C_jejuni_genomic.fa maxbin.030.go30.fa
+
+show-coords -rclTH C_vicugnae_vs_cjejuni.delta &gt; C_vicugnae_vs_cjejuni.coords.tab
+
+delta-filter -1 C_vicugnae_vs_cjejuni.delta &gt; C_vicugnae_vs_cjejuni.filtered.delta
+
+show-coords -rclTH C_vicugnae_vs_cjejuni.filtered.delta &gt; filtered.coords.tab</code></pre>
+<hr>
+<p>To obtain the full aligned sequences, the filtered delta file was processed to extract longer mapped regions using <strong><code>show-aligns</code></strong>. The aligned sequences from this step were then combined into a single alignment per genome pair using a custom AWK script (<code>combine_alignments.awk</code>).</p>
+<hr>
+<pre><code>## Longer mapped regions:
+
+#!/bin/bash
+
+DELTA_FILE="C_vicugnae_vs_cjejuni.filtered.delta"
+
+grep "^&gt;" "$DELTA_FILE" | cut -d' ' -f1,2 | sed 's/^&gt;//' | while read ref query; do
+    echo "Processing $ref vs $query"
+    outname="${ref}_vs_${query}.txt"
+    show-aligns "$DELTA_FILE" "$ref" "$query" &gt; "$outname"
+done
+
+## To combine mapped sequences:
+
+mkdir -p combined_sequences
+
+# combine_alignments.awk
+BEGIN {
+    RS = "-- BEGIN alignment";
+    FS = "\n";
+    ORS = "";
+    combined_ref = "";
+    combined_query = "";
+}
+{
+    ref_seq = "";
+    query_seq = "";
+    for (i = 3; i &lt;= NF; i++) {
+        if ($i ~ /^[0-9]/) {
+            split($i, parts, / +/);
+            ref_line = parts[2];
+            i++;
+            split($i, parts, / +/);
+            query_line = parts[2];
+            for (j = 1; j &lt;= length(ref_line); j++) {
+                ref_char = substr(ref_line, j, 1);
+                query_char = substr(query_line, j, 1);
+                query_seq = query_seq (query_char == "." ? ref_char : query_char);
+            }
+            ref_seq = ref_seq ref_line;
+        }
+    }
+    combined_ref = combined_ref ref_seq;
+    combined_query = combined_query query_seq;
+}
+END {
+    print "Combined Reference (" ref_name "):\n" combined_ref "\n";
+    print "Combined Query (" query_name "):\n" combined_query "\n";
+}
+
+## Run the script on all files:
+
+#!/bin/bash
+
+# Directory containing alignment files
+ALIGNMENTS_DIR="combined_sequences"
+
+# Output directory
+OUTPUT_DIR="combined_sequences"
+
+# Process each file
+for file in "$ALIGNMENTS_DIR"/AL111168.1_vs_*.txt; do
+    # Extract reference and query names from the filename
+    base=$(basename "$file" .txt)
+    ref_name="AL111168.1"
+    query_name=$(echo "$base" | cut -d'_' -f4- | sed 's/_vs_//')
+    # Run the AWK script with variables for ref/query names
+    awk -v ref_name="$ref_name" -v query_name="$query_name" \
+         -f combine_alignments.awk "$file" &gt; "$OUTPUT_DIR/${base}_combined.txt"
+
+    echo "Processed: $file -&gt; $OUTPUT_DIR/${base}_combined.txt"
+done</code></pre>
+<hr>
+</section>
+<section id="metabolic-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="metabolic-analysis">Metabolic Analysis</h3>
+<p>Metabolic analysis was performed using DRAM (Distillate and Annotate a Metagenome) (v1.3.5) to provide a detailed overview of the metabolic potential of each <em>Campylobacter</em> MAG. The <code>distill</code> subcommand was used to generate a concise summary of the metabolic functions identified in the annotated MAGs.</p>
+<p>The key parameters used for this step were:</p>
+<ul>
+<li><p><code>-i</code>: The input annotation file, which contained the predicted gene annotations for the MAGs.</p></li>
+<li><p><code>-o</code>: The output directory for the distilled results.</p></li>
+<li><p><code>--trna_path</code>: The path to the tRNA annotation file.</p></li>
+<li><p><code>--rrna_path</code>: The path to the rRNA annotation file.</p></li>
+</ul>
+<hr>
+<pre><code>module load DRAM/1.3.5-Miniconda3
+
+cd /nesi/nobackup/massey03212/Nat_comms/Genomic_analysis/10_Metabolic_functions/04_gene_annotation_and_coverage/C_infans_C_sp900_DRAM
+
+# Prokaryote annotations
+DRAM.py distill -i dram_annotations/annotations.tsv \
+                -o dram_distillation \
+                --trna_path dram_annotations/trnas.tsv \
+                --rrna_path dram_annotations/rrnas.tsv</code></pre>
+<hr>
+</section>
+<section id="read-based-k-mer-taxonomic-classification" class="level3">
+<h3 class="anchored" data-anchor-id="read-based-k-mer-taxonomic-classification">Read-based k-mer Taxonomic Classification</h3>
+<p>For an additional, independent taxonomic classification of the metagenomic reads, Kraken2 (v2.1.3) and Bracken (v2.7) were used. This approach provided a more nuanced view of the microbial community composition by identifying organisms at a species level. Kraken2 first classified reads against the standard database (12/2024), and Bracken then re-estimated the abundance of each taxon to correct for shared sequences.</p>
+<p>The key parameters used for Kraken2 were:</p>
+<ul>
+<li><p><code>--db</code>: The path to the Kraken2 database.</p></li>
+<li><p><code>--threads</code>: The number of CPU threads used for processing.</p></li>
+<li><p><code>--use-names</code>: This option was used to display the full taxonomic names in the output.</p></li>
+<li><p><code>--output</code>: The path for the main output file.</p></li>
+<li><p><code>--report</code>: The path for the classification report.</p></li>
+</ul>
+<p>The key parameters used for Bracken were:</p>
+<ul>
+<li><p><code>-db</code>: The path to the Kraken2 database used by Bracken.</p></li>
+<li><p><code>-i</code>: The Kraken2 report file.</p></li>
+<li><p><code>-l S</code>: This specified that Bracken should estimate abundance at the species level.</p></li>
+<li><p><code>-o</code>: The output path for the Bracken report.</p></li>
+<li><p><code>-t 10</code>: A confidence threshold for Bracken.</p></li>
+<li><p><code>-r 100</code>: This set the minimum number of reads required for a taxon to be included in the report.</p></li>
+</ul>
+<hr>
+<pre><code>module load Kraken2/2.1.3-GCC-11.3.0
+module load Bracken/2.7-GCC-11.3.0
+
+# Set input and output directories
+INPUT_DIR="/nesi/nobackup/massey03212/Nat_comms/orion_fastq"
+OUTPUT_DIR="/nesi/nobackup/massey03212/Nat_comms/Kraken2"
+
+# Create an array of paired files
+declare -A file_pairs
+for file in "$INPUT_DIR"/*_R1.fastq
+do
+  base_name=$(basename "$file" _R1.fastq)
+  paired_file="$INPUT_DIR/${base_name}_R2.fastq"
+  if [[ -f "$paired_file" ]]; then
+    file_pairs["$file"]="$paired_file"
+  fi
+done
+
+# First step: Kraken2
+for file1 in "${!file_pairs[@]}"
+do
+  file2=${file_pairs[$file1]}
+  base1=$(basename "$file1" .fastq)
+  base2=$(basename "$file2" .fastq)
+  kraken2 --db /nesi/nobackup/massey03212/Kraken2_DB_Standard_12_24/Standard_12_2024 --threads $SLURM_CPUS_PER_TASK --use-names "$file1" "$file2" --output "$OUTPUT_DIR/${base1}_${base2}.txt" --report "$OUTPUT_DIR/${base1}_${base2}.kreport"
+done
+
+# Second step: Bracken
+for file in "$OUTPUT_DIR"/*.kreport
+do
+  base=$(basename "$file" .kreport)
+  bracken -db /nesi/nobackup/massey03212/Kraken2_DB_Standard_12_24/Standard_12_2024 -i "$file" -l S -o "$OUTPUT_DIR/${base}_bracken.report" -t 10 -r 100
+done</code></pre>
+<hr>
+<hr>
+</section>
+<section id="statistical-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-analysis">Statistical Analysis</h3>
+<p>Statistical analyses were conducted in <strong>R (v4.5.1)</strong>. These analyses included a one-way analysis of variance (ANOVA) to compare the means of different groups, followed by Tukey’s honestly significant difference (HSD) test to perform pairwise comparisons between group means.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
