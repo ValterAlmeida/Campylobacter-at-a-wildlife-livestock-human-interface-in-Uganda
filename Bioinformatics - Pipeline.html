@@ -777,6 +777,75 @@ DRAM.py distill -i dram_annotations/annotations.tsv \
                 --trna_path dram_annotations/trnas.tsv \
                 --rrna_path dram_annotations/rrnas.tsv</code></pre>
 <hr>
+<p>Functional and metabolic annotation was also performed using KofamScan (v1.3.0) to assign KEGG Orthology (KO) identifiers to the protein sequences of the assembled MAGs. The resulting data were then processed with KEGGDecoder (v1.3) to map KO identifiers to complete metabolic pathways.</p>
+<p>KofamScan was executed with two primary output formats: a <strong>mapper</strong> format for KEGGDecoder input, and a <strong>detail</strong> format for comprehensive manual checking.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Parameter</strong></td>
+<td><strong>Purpose and Explanation</strong></td>
+</tr>
+<tr class="even">
+<td><code>-o</code></td>
+<td><strong>Output file name</strong> for the generated annotation results.</td>
+</tr>
+<tr class="odd">
+<td><code>-E 0.0001</code></td>
+<td>Sets the <strong>E-value threshold</strong> for ortholog assignment, filtering out hits with lower statistical significance.</td>
+</tr>
+<tr class="even">
+<td><code>-k</code></td>
+<td>Specifies the path to the <strong>KO list database</strong> (<code>ko\_list</code>) used by KofamScan.</td>
+</tr>
+<tr class="odd">
+<td><code>-p</code></td>
+<td>Specifies the path to the <strong>HMM profile database</strong> (<code>profiles</code>) of the KOfam HMM library.</td>
+</tr>
+<tr class="even">
+<td><code>-f mapper</code></td>
+<td>Sets the output format to <strong>“mapper,”</strong> which provides a concise, two-column output optimised for input into KEGGDecoder.</td>
+</tr>
+<tr class="odd">
+<td><code>-f detail</code></td>
+<td>Sets the output format to <strong>“detail,”</strong> which provides comprehensive information for each hit, including alignment scores and e-values.</td>
+</tr>
+</tbody>
+</table>
+<p>_________________________________________________________________________________________________________</p>
+<p>KEGGDecoder (v1.3) was used to map the KofamScan output to metabolic pathways.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Parameter</strong></td>
+<td><strong>Purpose and Explanation</strong></td>
+</tr>
+<tr class="even">
+<td><code>-i</code></td>
+<td><strong>Input file</strong>, which is the concise KofamScan output (<code>-f mapper</code>).</td>
+</tr>
+<tr class="odd">
+<td><code>-o</code></td>
+<td><strong>Output file name</strong> for the resulting pathway data.</td>
+</tr>
+<tr class="even">
+<td><code>-v static</code></td>
+<td>Specifies generation of the <strong>static output</strong> format, which provides a single summary file of pathway completeness.</td>
+</tr>
+<tr class="odd">
+<td><code>-v interactive</code></td>
+<td>Specifies generation of the <strong>interactive output</strong> format, allowing for dynamic visualisation of pathway coverage.</td>
+</tr>
+</tbody>
+</table>
+<p>_________________________________________________________________________________________________________</p>
 </section>
 <section id="read-based-k-mer-taxonomic-classification" class="level3">
 <h3 class="anchored" data-anchor-id="read-based-k-mer-taxonomic-classification">Read-based k-mer Taxonomic Classification</h3>

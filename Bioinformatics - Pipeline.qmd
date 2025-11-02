@@ -76,7 +76,7 @@ The key parameters used for host filtering were:
 
 An example of the script used for human samples is below:
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load BBMap/38.95-gimkl-2020a
@@ -91,7 +91,7 @@ for file in *_R1.trim.fastq.gz
 done
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ### Metagenomic assembly
 
@@ -107,7 +107,7 @@ To automate the assembly of each individual sample, a SLURM array job was used. 
 
 An example of the script used for a single sample assembly via the array job is shown below:
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load MEGAHIT/1.2.9-gimkl-2022a-Python-3.10.5
@@ -124,7 +124,7 @@ base_name=$(basename "$fastq_file_R1" _R1_hostFilt.fastq.gz)
 megahit -1 ${fastq_file_R1} -2 ${fastq_file_R2} -o ${OUTPUT_DIR}/${base_name}_megahit_out
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 Contigs with a length of less than 1,000 bp were filtered out using seqmagick (v0.8.4). This step was performed to remove short, potentially erroneous contigs and improve the quality of the final assembly.
 
@@ -136,7 +136,7 @@ The key parameters used were:
 
 An example of the script used is shown below:
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load seqmagick/0.8.4-gimkl-2020a-Python-3.8.2
@@ -144,7 +144,7 @@ module load seqmagick/0.8.4-gimkl-2020a-Python-3.8.2
 seqmagick convert --min-length 1000 final.contigs.fa Hc.m1000.fna
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ### Read mapping and sorting
 
@@ -152,7 +152,7 @@ Following contig filtering, the host-filtered reads were mapped back to their co
 
 First, a Bowtie2 index was built for each sample's filtered contigs.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load Bowtie2/2.5.4-GCC-12.3.0
@@ -160,7 +160,7 @@ module load Bowtie2/2.5.4-GCC-12.3.0
 bowtie2-build --threads $SLURM_CPUS_PER_TASK "samplename".m1000.fna "samplename"_bt2
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 Next, reads were mapped to the indexed contigs. The key parameters used for mapping were:
 
@@ -176,7 +176,7 @@ Next, reads were mapped to the indexed contigs. The key parameters used for mapp
 
 -   `-S`: The output file was saved in SAM format, which was then converted to BAM.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load Bowtie2/2.5.4-GCC-12.3.0
@@ -184,11 +184,11 @@ module load Bowtie2/2.5.4-GCC-12.3.0
 bowtie2 --minins 200 --maxins 800 --threads $SLURM_CPUS_PER_TASK --sensitive -x Hc_bt2 -1 Hc_R1_hostFilt.fastq.gz -2 Hc_R2_hostFilt.fastq.gz -S Hc.bam
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 Finally, the output BAM file was sorted and indexed using SAMtools (v1.9) to prepare it for subsequent analyses, such as abundance estimation and genome binning.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load SAMtools/1.9-GCC-7.4.0
@@ -197,7 +197,7 @@ samtools sort -@ $SLURM_CPUS_PER_TASK Hc.bam -o Hc.sorted.bam
 samtools index -@ $SLURM_CPUS_PER_TASK Hc.sorted.bam
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 Following read mapping, contigs were binned into MAGs using CONCOCT, MetaBAT2, and MaxBin2. A consensus approach was taken by running all three binning tools independently to maximize the recovery of high-quality bins.
 
@@ -213,7 +213,7 @@ CONCOCT (v1.1.0) was used to cluster contigs into bins based on both coverage an
 
 -   **`extract_fasta_bins.py`**: This final script extracted the full-length contigs for each bin into separate FASTA files.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load CONCOCT/1.1.0-gimkl-2020a-Python-3.8.2
@@ -231,7 +231,7 @@ extract_fasta_bins.py "sample_name.m1000.fna" \
                         --output_path "concoct_output/sample_name_concoct_output/fasta_bins"
 ```
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
@@ -250,7 +250,7 @@ metabat2 -t $SLURM_CPUS_PER_TASK -m 1500 \
          -o "metabat_bins/sample_name_metabat"
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 The key parameters were:
 
@@ -264,7 +264,7 @@ The key parameters were:
 
 ------------------------------------------------------------------------
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 MaxBin2 (v2.2.7) was used as a third binning method. The contig abundance file from the MetaBAT2 step was prepared for use with MaxBin2.
 
@@ -281,7 +281,7 @@ run_MaxBin.pl -thread $SLURM_CPUS_PER_TASK -min_contig_length 1500 \
               -out "maxbin_bins/sample_name_maxbin"
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 The key parameters were:
 
@@ -297,7 +297,7 @@ To consolidate the results from the different binning algorithms and obtain a hi
 
 For each binning method, a text file was created that associated every contig with its respective bin. An example of the commands used for MetaBAT2 is provided below. The same approach was applied to MaxBin2 and CONCOCT.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 for bin_path in metabat/*.fa;
@@ -308,7 +308,7 @@ do
 done
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 The association files from all three binning methods were then used as input for DAS Tool. The software selected the best representative bins from each set, resulting in a high-quality, consolidated set of MAGs.
 
@@ -326,7 +326,7 @@ The key parameters used were:
 
 -   `-o`: This defined the output directory for the final results.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load DAS_Tool/1.1.5-gimkl-2022a-R-4.2.1
@@ -339,7 +339,7 @@ DAS_Tool -i metabat_associations.txt,maxbin_associations.txt,concoct_association
          -o dastool_out/
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 To assess the quality of the final consolidated bins, CheckM2 (v1.0.1) was used. This software predicts the completeness and contamination of the MAGs, as well as other general characteristics such as genome size and GC content, which are key metrics for determining their quality.
 
@@ -357,7 +357,7 @@ The key parameters used were:
 
 -   `--force`: This option forced the analysis to overwrite any existing output.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load CheckM2/1.0.1-Miniconda3
@@ -371,7 +371,7 @@ checkm2 predict \
     --force > checkm_results.tsv
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 Then, dRep (v3.4.2), Mash (v.2.3) and CheckM2 (v.1.0.1) were used to dereplicate the bins and create a final dataset of unique MAGs. This step is crucial for removing redundant or highly similar genomes from the combined binning results. The *Campylobacter* MAGs obtained from this step were then selected for downstream analysis.
 
@@ -389,7 +389,7 @@ The key parameters used for this process were:
 
 -   `-sa 0.99`: The secondary ANI threshold was set to `99%` for final clustering, ensuring that the final representative MAGs were at least `99%` identical to their cluster members.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load CheckM2/1.0.1-Miniconda3
@@ -399,7 +399,7 @@ module load Mash/2.3-GCC-12.3.0
 dRep dereplicate dRep_output/ -p $SLURM_CPUS_PER_TASK --genomeInfo dRep.genomeInfo -g ../03_Quality_MAGs/*.fa -str 100 -pa 0.95 -sa 0.99
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 **Publicly available genome download**
 
@@ -407,7 +407,7 @@ Publicly available *Campylobacter* genomes were downloaded from NCBI to serve as
 
 First, the latest bacterial taxonomy file was downloaded from the GTDB database. Then, a script was used to select a single accession for each unique *Campylobacter* species (**s\_\_**), which ensured that the final dataset contained only one representative genome per species.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 # Download the latest GTDB bacterial taxonomy metadata file
@@ -444,7 +444,7 @@ for i in downloaded_genomes/*.fna; do
 done
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ### Taxonomic classification
 
@@ -464,7 +464,7 @@ The key parameters used for this analysis were:
 
 -   **`--out_dir`**: This defined the output directory for the results.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load GTDB-Tk/2.4.0-foss-2023a-Python-3.11.6
@@ -472,7 +472,7 @@ module load GTDB-Tk/2.4.0-foss-2023a-Python-3.11.6
 gtdbtk classify_wf -x fa --cpus $SLURM_CPUS_PER_TASK --skip_ani_screen --genome_dir /n
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 After taxonomic classification and multiple sequence alignment, a phylogenetic tree was inferred using IQ-TREE2 (v2.2.2.2). Branch support was assessed with 1000 ultrafast bootstrap replicates and the phylogenetic tree was visualised and annotated using the Interactive Tree of Life (iTOL v6).
 
@@ -488,7 +488,7 @@ The key parameters used were:
 
 -   `-b 1000`: This performed 1,000 ultrafast bootstrap replicates to assess the robustness of the tree branches.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load IQ-TREE/2.2.2.2-gimpi-2022a
@@ -496,7 +496,7 @@ module load IQ-TREE/2.2.2.2-gimpi-2022a
 iqtree2 -s gtdbtk.bac120.user_msa.fasta.gz -T $SLURM_CPUS_PER_TASK -mem 8GB -m TEST -b 1000
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ### Genome coverage and abundance normalisation
 
@@ -510,7 +510,7 @@ Once the BAM files were sorted, MetaBAT2 (v2.15) was used to calculate the per-s
 
 An example of the combined script used for this process is below:
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load Bowtie2/2.5.4-GCC-12.3.0
@@ -535,7 +535,7 @@ rm "${sample_name}.bam"
 jgi_summarize_bam_contig_depths --outputDepth bins_cov_table.txt mapped/*.bam
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 The relative abundance of each *Campylobacter* species was then calculated by normalising the number of reads mapped to their best-quality MAGs (and all unique MAGs per species) by the total sequencing depth of each sample and the length of the corresponding MAGs.
 
@@ -545,7 +545,7 @@ Following the initial coverage and abundance calculations, a custom Python scrip
 
 The script normalises the average fold coverage for contigs based on the output from `jgi_summarize_bam_contig_depths`. It achieves this by first retrieving the per-sample read depths from the `bowtie2` standard error output and then adjusting the coverage values accordingly. This produces a final, normalised coverage table suitable for downstream analysis.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
@@ -639,7 +639,7 @@ print("Completed norm_jgi_cov_table.py\r\n")
 ####################
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ### Gene prediction and functional annotation
 
@@ -647,7 +647,7 @@ Gene prediction was carried out using Prodigal (v2.6.3), which identified protei
 
 Prodigal was run on each MAG to predict genes, creating a gene file in FASTA format (`.fna`), an amino acid file in FASTA format (`.faa`), and a GenBank format file (`.gbk`). The `-p single` parameter was used to ensure that the gene prediction was optimised for single, un-concatenated genomes.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load prodigal/2.6.3-GCCcore-7.4.0
@@ -672,11 +672,11 @@ prodigal -i "$bin_file" -p single \
          -o predictions/"${pred_file}".genes.gbk
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 The following Prokka script was used to automate the annotation of each FASTA file.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load prokka/1.14.5-GCC-11.3.0
@@ -698,7 +698,7 @@ for file in "${INPUT_DIR}"/*.fa; do
 done
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ### Comparative genomics
 
@@ -710,7 +710,7 @@ ANI comparisons between all MAGs and publicly available genomes were performed w
 
 -   `--fragLen 1000`: This set the fragment length for alignment to 1,000 bp, which is an optimal length for accurate ANI calculation.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load FastANI/1.33-intel-2022a
@@ -750,7 +750,7 @@ done
 cat tmp_results/*.txt > "$OUTPUT"
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ### Virulence and antibiotic resistance gene analysis
 
@@ -762,7 +762,7 @@ The key parameters used for this process were:
 
 -   `*.fa`: This wildcard was used to process all FASTA files in the input directory.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load ABRicate/1.0.0-GCC-11.3.0-Perl-5.34.1
@@ -782,7 +782,7 @@ abricate --db resfinder *.fa > "$OUTDIR/resfinder.tsv"
 abricate --db vfdb *.fa > "$OUTDIR/vfdb.tsv"
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 Comparative alignments to the *C. jejuni* reference genome (GTDB ID GCA_000009085.1; NCTC11168) were conducted using MUMmer (v4.0). This pipeline was designed to identify, filter, and combine shared regions between the MAGs and the reference genome.
 
@@ -790,7 +790,7 @@ Initially, **`dnadiff`** was used to perform a whole-genome alignment between th
 
 Example:
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 ## MUMmer - Pipeline:
@@ -804,11 +804,11 @@ delta-filter -1 C_vicugnae_vs_cjejuni.delta > C_vicugnae_vs_cjejuni.filtered.del
 show-coords -rclTH C_vicugnae_vs_cjejuni.filtered.delta > filtered.coords.tab
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 To obtain the full aligned sequences, the filtered delta file was processed to extract longer mapped regions using **`show-aligns`**. The aligned sequences from this step were then combined into a single alignment per genome pair using a custom AWK script (`combine_alignments.awk`).
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 ## Longer mapped regions:
@@ -885,7 +885,7 @@ for file in "$ALIGNMENTS_DIR"/AL111168.1_vs_*.txt; do
 done
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ### Metabolic Analysis
 
@@ -901,7 +901,7 @@ The key parameters used for this step were:
 
 -   `--rrna_path`: The path to the rRNA annotation file.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load DRAM/1.3.5-Miniconda3
@@ -915,7 +915,35 @@ DRAM.py distill -i dram_annotations/annotations.tsv \
                 --rrna_path dram_annotations/rrnas.tsv
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
+
+Functional and metabolic annotation was also performed using KofamScan (v1.3.0) to assign KEGG Orthology (KO) identifiers to the protein sequences of the assembled MAGs. The resulting data were then processed with KEGGDecoder (v1.3) to map KO identifiers to complete metabolic pathways.
+
+KofamScan was executed with two primary output formats: a **mapper** format for KEGGDecoder input, and a **detail** format for comprehensive manual checking.
+
+|  |  |
+|----|----|
+| **Parameter** | **Purpose and Explanation** |
+| `-o` | **Output file name** for the generated annotation results. |
+| `-E 0.0001` | Sets the **E-value threshold** for ortholog assignment, filtering out hits with lower statistical significance. |
+| `-k` | Specifies the path to the **KO list database** (`ko\_list`) used by KofamScan. |
+| `-p` | Specifies the path to the **HMM profile database** (`profiles`) of the KOfam HMM library. |
+| `-f mapper` | Sets the output format to **"mapper,"** which provides a concise, two-column output optimised for input into KEGGDecoder. |
+| `-f detail` | Sets the output format to **"detail,"** which provides comprehensive information for each hit, including alignment scores and e-values. |
+
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+KEGGDecoder (v1.3) was used to map the KofamScan output to metabolic pathways.
+
+|  |  |
+|----|----|
+| **Parameter** | **Purpose and Explanation** |
+| `-i` | **Input file**, which is the concise KofamScan output (`-f mapper`). |
+| `-o` | **Output file name** for the resulting pathway data. |
+| `-v static` | Specifies generation of the **static output** format, which provides a single summary file of pathway completeness. |
+| `-v interactive` | Specifies generation of the **interactive output** format, allowing for dynamic visualisation of pathway coverage. |
+
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 ### Read-based k-mer Taxonomic Classification
 
@@ -947,7 +975,7 @@ The key parameters used for Bracken were:
 
 -   `-r 100`: This set the minimum number of reads required for a taxon to be included in the report.
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ```         
 module load Kraken2/2.1.3-GCC-11.3.0
@@ -985,7 +1013,7 @@ do
 done
 ```
 
-------------------------------------------------------------------------------------------
+------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 
