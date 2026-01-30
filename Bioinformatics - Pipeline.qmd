@@ -1,5 +1,5 @@
 ---
-title: "Metagenomic analysis of Campylobacter at a wildlife–livestock–human interface in Uganda reveals novel species associated with human disease"
+title: "Genome-resolved metagenomics of Campylobacter at a wildlife–livestock–human interface in Uganda reveals novel species associated with humans in healthcare settings"
 author:
   - Valter Almeida
   - Matthew A. Knox
@@ -401,7 +401,7 @@ dRep dereplicate dRep_output/ -p $SLURM_CPUS_PER_TASK --genomeInfo dRep.genomeIn
 
 ------------------------------------------------------------------------
 
-**Publicly available genome download**
+### **Publicly available genome download**
 
 Publicly available *Campylobacter* genomes were downloaded from NCBI to serve as a reference dataset for phylogenetic and comparative genomic analyses. This was a multi-step process.
 
@@ -474,7 +474,7 @@ gtdbtk classify_wf -x fa --cpus $SLURM_CPUS_PER_TASK --skip_ani_screen --genome_
 
 ------------------------------------------------------------------------
 
-After taxonomic classification and multiple sequence alignment, a phylogenetic tree was inferred using IQ-TREE2 (v2.2.2.2). Branch support was assessed with 1000 ultrafast bootstrap replicates and the phylogenetic tree was visualised and annotated using the Interactive Tree of Life (iTOL v6).
+After taxonomic classification and multiple sequence alignment, a phylogenetic tree was inferred using IQ-TREE2 (v2.2.2.2). Branch support was assessed with 1000 ultrafast bootstrap replicates and the phylogenetic tree was visualised and annotated using the Interactive Tree of Life (iTOL v6). The *Helicobacter pylori* reference genome (strain CHC155; NCBI accession GCA_025998455.1) was included as an outgroup for phylogenetic analysis.
 
 The key parameters used were:
 
@@ -784,6 +784,8 @@ abricate --db vfdb *.fa > "$OUTDIR/vfdb.tsv"
 
 ------------------------------------------------------------------------
 
+### Mapping to *Campylobacter* reference genomes
+
 Comparative alignments to the *C. jejuni* reference genome (GTDB ID GCA_000009085.1; NCTC11168) were conducted using MUMmer (v4.0). This pipeline was designed to identify, filter, and combine shared regions between the MAGs and the reference genome.
 
 Initially, **`dnadiff`** was used to perform a whole-genome alignment between the MAGs and the reference genome. The resulting delta file was then filtered to retain only the best-filtered alignments, removing redundant or poor-quality matches. The **`show-coords`** command was used to generate a tabular file summarising the alignment coordinates.
@@ -887,6 +889,26 @@ done
 
 ------------------------------------------------------------------------
 
+### Read mapping, re-mapping strategy, and taxonomic validation
+
+The same reference genomes were used for both read- and contig-level mapping analyses. Host-filtered paired-end reads were mapped using Bowtie2 (v2.5.4) in combination with SAMtools (v1.21). Reference genomes included *C. jejuni* and *C. coli*, as well as the highest-quality human-associated *Campylobacter* MAGs assembled in this study. MAGs were selected based on high genome completeness and low contamination, as assessed during genome quality control.
+
+#### Primary read mapping
+
+Initial mapping was performed by aligning host-filtered reads against *C. jejuni* and *C. coli* reference genome indices. Bowtie2 was run in `--sensitive` mode with paired-end constraints (`--minins 200`, `--maxins 800`) to ensure accurate alignment of properly paired reads while allowing for insert size variability.
+
+Unaligned paired reads were captured using the `--un-conc-gz` option, enabling downstream re-mapping steps. Only mapped reads were retained in BAM format by filtering out unmapped reads (`-F 4`) during SAMtools conversion. Mapped read counts for each species were calculated directly from BAM files using `samtools view -c`. Mapped reads were additionally extracted back into paired FASTQ format (`-f 3`) to allow downstream inspection and validation.
+
+#### Secondary re-mapping strategy
+
+To evaluate whether reads initially mapping to *C. jejuni* or *C. coli* could instead be explained by locally assembled *C. infans* or *C.* sp900539255 genomes, a two-step mapping strategy was applied. Reads that did not map to *C. infans* or *C.* sp900539255 MAGs were subsequently re-mapped to the *C. jejuni* and *C. coli* reference genomes. This approach allowed discrimination between true *C. jejuni*/*C. coli* signal and reads more accurately explained by closely related, locally assembled genomes. This iterative mapping framework reduced misassignment driven by reference bias and improved confidence in species-level attribution, particularly in the context of closely related *Campylobacter* taxa.
+
+#### Assembly and BLAST-based validation of *C. jejuni*-mapped reads
+
+Reads mapping to *C. jejuni* were assembled de novo using MEGAHIT (v1.2.9). Resulting contigs were queried against the NCBI nucleotide (nt) database using BLASTn (v2.16.0) with the RefSeq BLAST database release BLASTDB/2025-08.
+
+BLASTn searches were performed using a stringent e-value threshold (1e-10), with up to five target sequences retained per query. Output was generated in tabular format (outfmt 6), reporting query and subject identifiers, percent identity, alignment length, query coverage, e-value, bitscore, taxonomic identifiers, and scientific names. This analysis enabled taxonomic validation of assembled contigs and assessment of whether sequences initially assigned to *C. jejuni* represented true *C. jejuni* genomic material or homologous regions shared with other *Campylobacter* species.
+
 ### Metabolic Analysis
 
 Metabolic analysis was performed using DRAM (Distillate and Annotate a Metagenome) (v1.3.5) to provide a detailed overview of the metabolic potential of each *Campylobacter* MAG. The `distill` subcommand was used to generate a concise summary of the metabolic functions identified in the annotated MAGs.
@@ -922,7 +944,7 @@ Functional and metabolic annotation was also performed using KofamScan (v1.3.0) 
 KofamScan was executed with two primary output formats: a **mapper** format for KEGGDecoder input, and a **detail** format for comprehensive manual checking.
 
 |  |  |
-|----|----|
+|------------------------------------|------------------------------------|
 | **Parameter** | **Purpose and Explanation** |
 | `-o` | **Output file name** for the generated annotation results. |
 | `-E 0.0001` | Sets the **E-value threshold** for ortholog assignment, filtering out hits with lower statistical significance. |
@@ -936,7 +958,7 @@ KofamScan was executed with two primary output formats: a **mapper** format for 
 KEGGDecoder (v1.3) was used to map the KofamScan output to metabolic pathways.
 
 |  |  |
-|----|----|
+|------------------------------------|------------------------------------|
 | **Parameter** | **Purpose and Explanation** |
 | `-i` | **Input file**, which is the concise KofamScan output (`-f mapper`). |
 | `-o` | **Output file name** for the resulting pathway data. |
@@ -945,7 +967,7 @@ KEGGDecoder (v1.3) was used to map the KofamScan output to metabolic pathways.
 
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
-### Read-based k-mer Taxonomic Classification
+### Read-based *k*-mer Taxonomic Classification
 
 For an additional, independent taxonomic classification of the metagenomic reads, Kraken2 (v2.1.3) and Bracken (v2.7) were used. This approach provided a more nuanced view of the microbial community composition by identifying organisms at a species level. Kraken2 first classified reads against the standard database (12/2024), and Bracken then re-estimated the abundance of each taxon to correct for shared sequences.
 
