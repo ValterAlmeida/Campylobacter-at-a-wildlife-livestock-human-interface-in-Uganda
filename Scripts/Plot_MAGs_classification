@@ -1,0 +1,37 @@
+import plotly.graph_objects as go
+
+# Create the dataset
+hosts = ["Gorillas", "Humans", "Cattle", "Goats"]
+known_species = [15, 154, 3, 7]
+novel_species = [22, 453, 23, 99]
+novel_species_without_ref = [1448, 84, 34, 69]
+
+# Create the alluvial plot using plotly
+fig = go.Figure(data=[go.Sankey(
+    node=dict(
+        label=hosts + ["Known species", "Novel species", "Novel species without_ref"],
+        color=["rgba(0,100,0, 0.80)", "rgba(0, 123, 255, 0.34)", "rgba(231, 138, 0, 0.62)", "rgba(255, 242, 72, 0.78)",
+               "rgba(128,128,128,1.0)", "rgba(75, 0, 130, 0.9)", "rgba(141, 0, 0, 1)"]
+    ),
+    link=dict(
+        source=[0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3],
+        target=[4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6],
+        value=known_species + novel_species + novel_species_without_ref,
+        color=["rgba(128,128,128,0.2)"] * 4 + ["rgba(75, 0, 130, 0.2)"] * 4 + ["rgba(255, 99, 71, 0.15)"] * 4
+    )
+)])
+
+# Customize the plot layout
+fig.update_layout(
+    title="MAG assignment/classification",  # Set the title
+    font=dict(
+        size=18,  # Increase the font size
+        family="Arial, bold"  # Make the font bold
+    ),
+    title_x=0.5,  # Center the title horizontally
+    width=700,
+    height=800
+)
+
+# Display the plot
+fig.show()

@@ -1,0 +1,730 @@
+# read in data
+
+df <- read.csv("/Users/valter/Downloads/Kraken2/beta_diversity_uganda_matrix_clean.csv", header = TRUE)
+
+head(df)
+nrow(df)
+ncol(df)
+
+# Load the vegan package
+library(vegan)
+
+# Read in the distance matrix
+df <- read.csv("/Users/valter/Downloads/Kraken2/beta_diversity_uganda_matrix_clean.csv", header = TRUE)
+
+# Check for missing values in the distance matrix
+any(is.na(df))
+
+# Remove missing values from the distance matrix
+df_clean <- na.omit(df)
+
+# Convert the distance matrix to a distance object
+dist_matrix <- dist(df_clean)
+
+# Perform a PCoA analysis
+pcoa <- cmdscale(dist_matrix, k = nrow(df_clean) - 1)
+
+# Create a data frame containing the PCoA scores
+pcoa_df <- data.frame(Sample = rownames(pcoa), PC1 = pcoa[, 1], PC2 = pcoa[, 2])
+
+# Create a scatter plot of the PCoA scores
+plot(pcoa_df$PC1, pcoa_df$PC2, pch = 16, cex = 1.5, col = "black", xlab = "PC1", ylab = "PC2")
+
+# Add labels to the plot
+text(pcoa_df$PC1, pcoa_df$PC2, labels = pcoa_df$Sample, pos = 4, cex = 0.7)
+
+
+
+#ADD GROUPS TEST 1
+
+# Load the vegan package
+library(vegan)
+
+# Read in the distance matrix
+df <- read.csv("/Users/valter/Downloads/Kraken2/beta_diversity_uganda_matrix_clean.csv", header = TRUE)
+
+# Check for missing values in the distance matrix
+any(is.na(df))
+
+# Remove missing values from the distance matrix
+df_clean <- na.omit(df)
+
+# Convert the distance matrix to a distance object
+dist_matrix <- dist(df_clean)
+
+# Perform a PCoA analysis
+pcoa <- cmdscale(dist_matrix, k = nrow(df_clean) - 1)
+
+# Define the sample groups
+wild_gorilla <- 1:98
+habituated_gorilla <- 99:197
+human_hospital <- 198:295
+human_community <- 296:392
+cattle <- 393:475
+goat <- 476:548
+
+# Create a data frame containing the PCoA scores and group information
+pcoa_df <- data.frame(Sample = rownames(pcoa), PC1 = pcoa[, 1], PC2 = pcoa[, 2],
+                      group = factor(c(rep("Wild gorilla", 98),
+                                       rep("Habituated gorilla", 99-98),
+                                       rep("Human - hospital", 196-99+1),
+                                       rep("Human - community", 392-196),
+                                       rep("Cattle", 475-392),
+                                       rep("Goat", 548-475))))
+
+# Create a vector of colors for each group
+group_colors <- c("red", "blue", "green", "orange", "purple", "pink")
+
+# Create a scatter plot of the PCoA scores, colored by group
+plot(pcoa_df$PC1, pcoa_df$PC2, pch = 16, cex = 1.5, col = group_colors[pcoa_df$group],
+     xlab = "PC1", ylab = "PC2")
+
+# Add labels to the plot
+text(pcoa_df$PC1, pcoa_df$PC2, labels = pcoa_df$Sample, pos = 4, cex = 0.7)
+
+# Add legend to the plot
+legend("topright", legend = levels(pcoa_df$group), col = group_colors, pch = 16)
+
+
+#TEST 2
+
+# Load the vegan package
+library(vegan)
+
+# Read in the distance matrix
+df <- read.csv("/Users/valter/Downloads/Kraken2/beta_diversity_uganda_matrix_clean.csv", header = TRUE)
+
+# Check for missing values in the distance matrix
+any(is.na(df))
+
+# Remove missing values from the distance matrix
+df_clean <- na.omit(df)
+
+# Convert the distance matrix to a distance object
+dist_matrix <- dist(df_clean)
+
+# Perform a PCoA analysis
+pcoa <- cmdscale(dist_matrix, k = nrow(df_clean) - 1)
+
+# Define the sample groups
+wild_gorilla <- 1:98
+habituated_gorilla <- 98:197
+human_hospital <- 198:295
+human_community <- 296:392
+cattle <- 393:475
+goat <- 476:548
+
+# Create a data frame containing the PCoA scores and group information
+pcoa_df <- data.frame(Sample = rownames(pcoa), PC1 = pcoa[, 1], PC2 = pcoa[, 2],
+                      group = factor(c(rep("Wild gorilla", 98),
+                                       rep("Habituated gorilla", 197-98+1),
+                                       rep("Human - hospital", 295-197),
+                                       rep("Human - community", 392-295),
+                                       rep("Cattle", 475-392),
+                                       rep("Goat", 548-475))))
+
+# Create a vector of colors for each group
+group_colors <- c("red", "blue", "green", "orange", "purple", "pink")
+
+# Create a scatter plot of the PCoA scores, colored by group
+plot(pcoa_df$PC1, pcoa_df$PC2, pch = 16, cex = 1.5, col = group_colors[pcoa_df$group],
+     xlab = "PC1", ylab = "PC2")
+
+# Add labels to the plot
+text(pcoa_df$PC1, pcoa_df$PC2, labels = pcoa_df$Sample, pos = 4, cex = 0.7)
+
+# Add legend to the plot
+legend("topright", legend = levels(pcoa_df$group), col = group_colors, pch = 16)
+
+
+#TEST 3
+
+# Load required libraries
+library(ggplot2)
+library(vegan)
+
+# Read in the distance matrix
+df <- read.csv("/Users/valter/Downloads/Kraken2/beta_diversity_uganda_matrix_clean.csv", header = TRUE)
+
+# Check for missing values in the distance matrix
+any(is.na(df))
+
+# Remove missing values from the distance matrix
+df_clean <- na.omit(df)
+
+# Convert the distance matrix to a distance object
+dist_matrix <- dist(df_clean)
+
+# Perform a PCoA analysis
+pcoa <- cmdscale(dist_matrix, k = nrow(df_clean) - 1)
+
+# Define the sample groups
+wild_gorilla <- 1:98
+habituated_gorilla <- 99:197
+human_hospital <- 198:295
+human_community <- 296:392
+cattle <- 393:475
+goat <- 476:548
+
+# Create a data frame containing the PCoA scores and group information
+pcoa_df <- data.frame(Sample = rownames(pcoa), PC1 = pcoa[, 1], PC2 = pcoa[, 2],
+                      group = factor(c(rep("Wild gorilla", 98),
+                                       rep("Habituated gorilla", 197-98+1),
+                                       rep("Human - hospital", 295-197),
+                                       rep("Human - community", 392-295),
+                                       rep("Cattle", 475-392),
+                                       rep("Goat", 548-475)))
+
+# Create a vector of colors for each group
+group_colors <- c("red", "blue", "green", "orange", "purple", "pink")
+
+# Create a ggplot object with PC1 and PC2 on x and y axes, respectively
+ggplot(pcoa_df, aes(x = PC1, y = PC2)) +
+
+  # Add points colored by group
+  geom_point(aes(color = group), size = 3.5) +
+
+  # Add labels to the points
+  geom_text(aes(label = Sample), size = 3, hjust = 0.5, vjust = 0.5) +
+
+  # Add dissimilarity values as tooltips
+  ggplot2::tooltip_aes("dissimilarity") +
+
+  # Add a title to the plot
+  ggtitle("PCoA Plot") +
+
+  # Customize the legend
+  scale_color_manual(values = group_colors, name = "Group") +
+
+  # Customize the x and y axis labels
+  xlab("PC1") +
+  ylab("PC2") +
+
+  # Customize the theme of the plot
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(colour = "black"),
+        legend.position = "right")
+
+
+# Heatmap:
+
+# Load required libraries
+library(ggplot2)
+library(reshape2)
+
+# Read in the distance matrix
+df <- read.csv("/Users/valter/Downloads/Kraken2/beta_diversity_uganda_matrix_clean.csv", header = TRUE)
+
+# Check for missing values in the distance matrix
+any(is.na(df))
+
+# Remove missing values from the distance matrix
+df_clean <- na.omit(df)
+
+# Convert the distance matrix to a distance object
+dist_matrix <- dist(df_clean)
+
+# Create a matrix from the distance object
+dist_matrix_mat <- as.matrix(dist_matrix)
+
+# Create a rownames column for the matrix
+dist_matrix_mat <- cbind(rownames(dist_matrix_mat), dist_matrix_mat)
+
+# Convert the matrix to a long format
+dist_matrix_long <- melt(dist_matrix_mat, id.vars = "rownames")
+
+# Rename the columns
+colnames(dist_matrix_long) <- c("Sample1", "Sample2", "Distance")
+
+# Convert the Distance column to a numeric data type
+dist_matrix_long$Distance <- as.numeric(dist_matrix_long$Distance)
+
+# Create a ggplot object with Sample1 and Sample2 on x and y axes, respectively
+ggplot(dist_matrix_long, aes(x = Sample1, y = Sample2, fill = Distance)) +
+
+  # Add the heatmap
+  geom_tile() +
+
+  # Customize the color scale
+  scale_fill_gradient(low = "white", high = "red", name = "Distance") +
+
+  # Rotate the x-axis labels
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+
+  # Add a title to the plot
+  ggtitle("Distance Matrix Heatmap")
+
+
+# TEST Heatmap 2
+
+# Load required libraries
+library(ggplot2)
+library(reshape2)
+
+# Define the groups for each sample
+groups <- c(rep("Wild gorilla", 98),
+            rep("Habituated gorilla", 100),
+            rep("Human - hospital", 98),
+            rep("Human - community", 97),
+            rep("Cattle", 83),
+            rep("Goat", 73))
+
+# Read in the distance matrix
+df <- read.csv("/Users/valter/Downloads/Kraken2/beta_diversity_uganda_matrix_clean.csv", header = TRUE)
+
+# Check for missing values in the distance matrix
+any(is.na(df))
+
+# Remove missing values from the distance matrix
+df_clean <- na.omit(df)
+
+# Convert the distance matrix to a distance object
+dist_matrix <- dist(df_clean)
+
+# Create a matrix from the distance object
+dist_matrix_mat <- as.matrix(dist_matrix)
+
+# Create a rownames column for the matrix
+dist_matrix_mat <- cbind(rownames(dist_matrix_mat), dist_matrix_mat)
+
+# Convert the matrix to a long format
+dist_matrix_long <- melt(dist_matrix_mat, id.vars = "rownames")
+
+# Rename the columns
+colnames(dist_matrix_long) <- c("Sample1", "Sample2", "Distance")
+
+# Convert the Distance column to a numeric data type
+dist_matrix_long$Distance <- as.numeric(dist_matrix_long$Distance)
+
+# Add a column for the groups
+dist_matrix_long$Group <- groups
+
+# Create a ggplot object with Sample1 and Sample2 on x and y axes, respectively
+ggplot(dist_matrix_long, aes(x = Sample1, y = Sample2, fill = Distance)) +
+
+  # Add the heatmap
+  geom_tile() +
+
+  # Color the tiles by group
+  scale_fill_gradient(low = "white", high = "red", name = "Distance") +
+  scale_x_discrete(position = "top") +
+  scale_y_discrete(limits = rev(levels(dist_matrix_long$Sample1))) +
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(. ~ Group) +
+
+  # Rotate the x-axis labels
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+
+  # Add a title to the plot
+  ggtitle("Distance Matrix Heatmap")
+
+
+# TEST 3 PCoA and Heatmap: PERFECT
+
+library(vegan)
+library(ggplot2)
+library(RColorBrewer)
+
+# Read in the distance matrix
+df <- read.csv("/Users/valter/Downloads/Kraken2/beta_diversity_uganda_matrix_clean.csv", header = TRUE, row.names = 1)
+dissimilarity <- as.dist(df)
+
+# Compute the PCoA
+pcoa <- cmdscale(dissimilarity, k = 2, eig = TRUE)
+pcoa_df <- data.frame(Sample = rownames(pcoa$points), PC1 = pcoa$points[, 1], PC2 = pcoa$points[, 2])
+
+# Define the groups
+sample_groups <- rep(NA, nrow(pcoa_df))
+sample_groups[1:98] <- "Wild gorilla"
+sample_groups[99:198] <- "Habituated gorilla"
+sample_groups[199:296] <- "Human - hospital"
+sample_groups[297:393] <- "Human - community"
+sample_groups[394:476] <- "Cattle"
+sample_groups[477:549] <- "Goat"
+
+pcoa_df$Group <- sample_groups
+
+# Create the PCoA plot with groups
+ggplot(pcoa_df, aes(x = PC1, y = PC2, color = Group)) +
+  geom_point(size = 3) +
+  scale_color_manual(values = c("red", "blue", "green", "purple", "orange", "black")) +
+  ggtitle("PCoA Plot with Groups") +
+  xlab("PC1") + ylab("PC2") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# Create a heatmap
+heatmap_data <- as.matrix(df)
+heatmap_data_scale <- scale(heatmap_data)
+heatmap_data_dist <- dist(heatmap_data_scale)
+heatmap_colors <- brewer.pal(n = 9, name = "YlOrRd")
+heatmap_breaks <- seq(from = min(heatmap_data), to = max(heatmap_data), length.out = length(heatmap_colors) + 1)
+
+ggplot(data.frame(as.table(heatmap_data)), aes(Var1, Var2, fill = Freq)) +
+  geom_tile(color = "white") +
+  scale_fill_gradientn(colours = rev(heatmap_colors), breaks = heatmap_breaks, na.value = "white") +
+  ggtitle("Distance Matrix Heatmap") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  coord_fixed(ratio = 1)
+
+# TESTE de novo
+
+library(ggplot2)
+
+# Create a data frame with PCoA scores and sample groups
+pcoa_df <- data.frame(Sample = rownames(pcoa$points), PC1 = pcoa$points[, 1], PC2 = pcoa$points[, 2], Group = sample_groups)
+
+# Create a ggplot object with PC1 and PC2 on x and y axes, respectively, colored by group
+ggplot(pcoa_df, aes(x = PC1, y = PC2, color = Group)) +
+  # Add points for each sample
+  geom_point(alpha = 0.5) +
+  # Add labels for each sample
+  geom_text(aes(label = Sample), vjust = -1, hjust = 0.5) +
+  # Add a title to the plot
+  ggtitle("PCoA Plot with Transparency") +
+  # Adjust color scale
+  scale_color_discrete(name = "Group") +
+  # Adjust transparency
+  theme(legend.key.size = unit(0.5, "cm"))
+
+#TEST 5
+
+library(ggplot2)
+library(viridis)
+
+# Create a data frame with PC1, PC2, and group information
+pcoa_df <- data.frame(Sample = rownames(pcoa$points),
+                      PC1 = pcoa$points[, 1],
+                      PC2 = pcoa$points[, 2],
+                      Group = sample_groups)
+
+# Create a ggplot object with PC1 and PC2 on x and y axes, respectively
+ggplot(pcoa_df, aes(x = PC1, y = PC2)) +
+
+  # Add points to the plot, color-coded by group
+  geom_point(aes(color = Group), size = 3, alpha = 0.7) +
+
+  # Add color scale to the legend
+  scale_color_viridis(discrete = TRUE) +
+
+  # Add a title to the plot
+  ggtitle("PCoA Plot of Distance Matrix") +
+
+  # Add axis labels
+  xlab("PC1") + ylab("PC2") +
+
+  # Adjust theme
+  theme_bw() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "right",
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
+
+
+# TEST 65
+
+# Set custom colors for each group
+group_colors <- c("Wild gorilla" = "#38761d", "Habituated gorilla" = "#b6d7a8",
+                  "Human - hospital" = "#3d85c6", "Human - community" = "#cfe2f3",
+                  "Cattle" = "#e69138", "Goat" = "#ffd966")
+
+# Change the order of the legend to match the order of the groups
+group_order <- c("Wild gorilla", "Habituated gorilla", "Human - hospital",
+                 "Human - community", "Cattle", "Goat")
+
+# Create a ggplot object with PC1 and PC2 on x and y axes, respectively
+ggplot(pcoa_df, aes(x = PC1, y = PC2, color = Group)) +
+  # Add points with custom colors and alpha value
+  geom_point(alpha = 0.8, size = 3) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Add a title to the plot
+  ggtitle("PCoA - Beta diversity") +
+  # Add x and y axis labels
+  xlab("PC1") + ylab("PC2") +
+  # Adjust the theme of the plot
+  theme_bw()
+
+# Increase the font sizes:
+
+# Load required packages
+library(ggplot2)
+library(ggridges)  # Make sure you have ggridges installed
+
+# Set custom colors for each group
+group_colors <- c("Wild gorilla" = "#38761d", "Habituated gorilla" = "#b6d7a8",
+                  "Human - hospital" = "#3d85c6", "Human - community" = "#cfe2f3",
+                  "Cattle" = "#e69138", "Goat" = "#ffd966")
+
+# Change the order of the legend to match the order of the groups
+group_order <- c("Wild gorilla", "Habituated gorilla", "Human - hospital",
+                 "Human - community", "Cattle", "Goat")
+
+# Set base font size for the entire plot
+font_size <- 14
+
+# Create a ggplot object with PC1 and PC2 on x and y axes, respectively
+ggplot(pcoa_df, aes(x = PC1, y = PC2, color = Group)) +
+  # Add points with custom colors and alpha value
+  geom_point(alpha = 0.8, size = 3) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Add a title to the plot
+  labs(title = "PCoA - Beta diversity") +  # Set plot title
+  # Add x and y axis labels
+  xlab("PC1") + ylab("PC2") +
+  # Adjust the theme of the plot
+  theme_bw(base_size = font_size) +  # Set base font size
+  theme(axis.text = element_text(size = font_size),  # Increase axis tick label font size
+        axis.title = element_text(size = font_size),  # Increase axis label font size
+        legend.title = element_text(size = font_size),  # Increase legend title font size
+        legend.text = element_text(size = font_size),   # Increase legend text font size
+        plot.title = element_text(size = font_size + 2),  # Increase plot title font size
+        strip.text = element_text(size = font_size, face = "bold"),  # Increase facet label font size
+        strip.background = element_blank())  # Remove facet background
+
+# Please continue with the rest of your code if needed...
+
+
+
+
+
+#TEST
+
+# Load required packages
+library(ggplot2)
+library(ggridges)  # Make sure you have ggridges installed
+
+# Set custom colors for each group
+group_colors <- c("Wild gorilla" = "#38761d", "Habituated gorilla" = "#b6d7a8",
+                  "Human - hospital" = "#3d85c6", "Human - community" = "#cfe2f3",
+                  "Cattle" = "#e69138", "Goat" = "#ffd966")
+
+# Change the order of the legend to match the order of the groups
+group_order <- c("Wild gorilla", "Habituated gorilla", "Human - hospital",
+                 "Human - community", "Cattle", "Goat")
+
+# Create a ggplot object with PC1 and PC2 on x and y axes, respectively
+ggplot(pcoa_df, aes(x = PC1, y = PC2, color = Group)) +
+  # Add points with custom colors and alpha value
+  geom_point(alpha = 0.8, size = 3) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Add a title to the plot
+  ggtitle("PCoA - Beta diversity") +
+  # Add x and y axis labels
+  xlab("PC1") + ylab("PC2") +
+  # Adjust the theme of the plot
+  theme_bw() +
+  # Add external distribution plot
+  ggridges::geom_density_ridges(aes(y = after_stat(density), fill = Group, color = Group),
+                                alpha = 0.6, size = 0.2, position = "identity", rel_min_height = 0.01) +
+  scale_fill_manual(values = group_colors, limits = group_order) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Flip the y-axis to show the distribution plot below the scatter plot
+  scale_y_reverse()
+
+#TEST 2
+
+# Load required packages
+library(ggplot2)
+library(ggridges)  # Make sure you have ggridges installed
+library(patchwork)
+
+# Set custom colors for each group
+group_colors <- c("Wild gorilla" = "#38761d", "Habituated gorilla" = "#b6d7a8",
+                  "Human - hospital" = "#3d85c6", "Human - community" = "#cfe2f3",
+                  "Cattle" = "#e69138", "Goat" = "#ffd966")
+
+# Change the order of the legend to match the order of the groups
+group_order <- c("Wild gorilla", "Habituated gorilla", "Human - hospital",
+                 "Human - community", "Cattle", "Goat")
+
+# Create a ggplot object with PC1 and PC2 on x and y axes, respectively
+scatter_plot <- ggplot(pcoa_df, aes(x = PC1, y = PC2, color = Group)) +
+  # Add points with custom colors and alpha value
+  geom_point(alpha = 0.8, size = 3) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Add a title to the plot
+  ggtitle("PCoA - Beta diversity") +
+  # Add x and y axis labels
+  xlab("PC1") + ylab("PC2") +
+  # Adjust the theme of the plot
+  theme_bw()
+
+# Create external distribution plot using ggridges
+distribution_plot <- ggplot(pcoa_df, aes(x = PC1, y = after_stat(density), fill = Group, color = Group)) +
+  geom_density_ridges(alpha = 0.6, size = 0.2, position = "identity", rel_min_height = 0.01) +
+  scale_fill_manual(values = group_colors, limits = group_order) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Adjust the theme of the plot
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+
+# Arrange the scatter plot and distribution plot side by side
+scatter_plot + distribution_plot + plot_layout(ncol = 2, widths = c(4, 1))
+
+# TEST 4
+
+# Load required packages
+library(ggplot2)
+library(ggridges)  # Make sure you have ggridges installed
+library(patchwork)
+
+# Set custom colors for each group
+group_colors <- c("Wild gorilla" = "#38761d", "Habituated gorilla" = "#b6d7a8",
+                  "Human - hospital" = "#3d85c6", "Human - community" = "#cfe2f3",
+                  "Cattle" = "#e69138", "Goat" = "#ffd966")
+
+# Change the order of the legend to match the order of the groups
+group_order <- c("Wild gorilla", "Habituated gorilla", "Human - hospital",
+                 "Human - community", "Cattle", "Goat")
+
+# Create a ggplot object with PC1 and PC2 on x and y axes, respectively
+scatter_plot <- ggplot(pcoa_df, aes(x = PC1, y = PC2, color = Group)) +
+  # Add points with custom colors and alpha value
+  geom_point(alpha = 0.8, size = 3) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Add a title to the plot
+  ggtitle("PCoA - Beta diversity") +
+  # Add x and y axis labels
+  xlab("PC1") + ylab("PC2") +
+  # Adjust the theme of the plot
+  theme_bw()
+
+# Create external distribution plot using ggridges
+distribution_plot <- ggplot(pcoa_df, aes(x = PC1, y = after_stat(density), fill = Group, color = Group)) +
+  geom_density_ridges(alpha = 0.6, size = 0.2, position = "identity", rel_min_height = 0.01) +
+  scale_fill_manual(values = group_colors, limits = group_order) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Adjust the theme of the plot
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  # Flip the x-axis to show the distribution plot outside the main scatter plot
+  scale_x_reverse() +
+  # Remove the legend for the distribution plot
+  guides(color = "none")
+
+# Arrange the scatter plot and distribution plot side by side using patchwork
+scatter_plot + distribution_plot + plot_layout(ncol = 2, widths = c(4, 1))
+
+#Distribution plot:
+
+# Load required packages
+library(ggplot2)
+library(ggridges)  # Make sure you have ggridges installed
+
+# Set custom colors for each group
+group_colors <- c("Wild gorilla" = "#38761d", "Habituated gorilla" = "#b6d7a8",
+                  "Human - hospital" = "#3d85c6", "Human - community" = "#cfe2f3",
+                  "Cattle" = "#e69138", "Goat" = "#ffd966")
+
+# Change the order of the legend to match the order of the groups
+group_order <- c("Wild gorilla", "Habituated gorilla", "Human - hospital",
+                 "Human - community", "Cattle", "Goat")
+
+# Create external distribution plot using ggridges
+distribution_plot <- ggplot(pcoa_df, aes(x = PC1, y = after_stat(density), fill = Group, color = Group)) +
+  geom_density_ridges(alpha = 0.6, size = 0.2, position = "identity", rel_min_height = 0.01) +
+  scale_fill_manual(values = group_colors, limits = group_order) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Adjust the theme of the plot
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  # Flip the x-axis to show the distribution plot outside the main scatter plot
+  scale_x_reverse() +
+  # Remove unnecessary elements
+  labs(x = NULL, y = NULL) +
+  guides(color = "none") +
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        strip.text = element_text(size = 12, face = "bold"))
+
+# Display only the distribution plot
+print(distribution_plot)
+
+# cuting in the bottom?
+
+# Load required packages
+library(ggplot2)
+library(ggridges)  # Make sure you have ggridges installed
+
+# Set custom colors for each group
+group_colors <- c("Wild gorilla" = "#38761d", "Habituated gorilla" = "#b6d7a8",
+                  "Human - hospital" = "#3d85c6", "Human - community" = "#cfe2f3",
+                  "Cattle" = "#e69138", "Goat" = "#ffd966")
+
+# Change the order of the legend to match the order of the groups
+group_order <- c("Wild gorilla", "Habituated gorilla", "Human - hospital",
+                 "Human - community", "Cattle", "Goat")
+
+# Create external distribution plot using ggridges
+distribution_plot <- ggplot(pcoa_df, aes(x = PC1, y = after_stat(density), fill = Group, color = Group)) +
+  geom_density_ridges(alpha = 0.6, size = 0.2, position = "identity", rel_min_height = 0.01) +
+  scale_fill_manual(values = group_colors, limits = group_order) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Adjust the theme of the plot
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  # Flip the x-axis to show the distribution plot outside the main scatter plot
+  scale_x_reverse() +
+  # Remove unnecessary elements
+  labs(x = NULL, y = NULL) +
+  guides(color = "none") +
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        strip.text = element_text(size = 12, face = "bold"),
+        plot.margin = margin(10, 20, 30, 20, "pt"))  # Adjust the bottom margin as needed
+
+# Display only the distribution plot
+print(distribution_plot)
+
+
+#INDIVIDUAL GROUPS
+
+# Load required packages
+library(ggplot2)
+library(ggridges)  # Make sure you have ggridges installed
+
+# Set custom colors for each group
+group_colors <- c("Wild gorilla" = "#38761d", "Habituated gorilla" = "#b6d7a8",
+                  "Human - hospital" = "#3d85c6", "Human - community" = "#cfe2f3",
+                  "Cattle" = "#e69138", "Goat" = "#ffd966")
+
+# Change the order of the legend to match the order of the groups
+group_order <- c("Wild gorilla", "Habituated gorilla", "Human - hospital",
+                 "Human - community", "Cattle", "Goat")
+
+# Create external distribution plot for each group using ggridges and facets
+distribution_plots <- ggplot(pcoa_df, aes(x = PC1, y = after_stat(density), fill = Group, color = Group)) +
+  geom_density_ridges(alpha = 0.6, size = 0.2, position = "identity", rel_min_height = 0.01) +
+  scale_fill_manual(values = group_colors, limits = group_order) +
+  scale_color_manual(values = group_colors, limits = group_order) +
+  # Adjust the theme of the plot
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  # Flip the x-axis to show the distribution plot outside the main scatter plot
+  scale_x_reverse() +
+  # Remove unnecessary elements
+  labs(x = NULL, y = NULL) +
+  guides(color = "none") +
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        strip.text = element_text(size = 12, face = "bold"),
+        plot.margin = margin(10, 20, 30, 20, "pt"))  # Adjust the bottom margin as needed
+
+# Facet by Group to create individual density plots for each group
+distribution_plots_by_group <- distribution_plots + facet_wrap(~ Group, ncol = 2)
+
+# Display the individual density plots for each group
+print(distribution_plots_by_group)

@@ -1,0 +1,569 @@
+library(vegan)
+library(ggplot2)
+
+# Read in data
+df <- read.csv("/Users/valter/Downloads/R_Microbiome/MAGs/Kegg/treponema/Presence_absense_matrix_kegg.csv", header = TRUE)
+
+# Store the original KO list codes
+ko_list <- df$ko_list
+
+# Remove the first column containing sample names
+df_clean <- df[, -1, drop = FALSE]
+
+# Create a new matrix with only 0s and 1s
+df_binary <- df_clean
+df_binary[df_binary != 0] <- 1
+
+# Transpose the matrix
+df_transposed <- t(df_binary)
+
+# Convert matrix to numeric
+df_numeric <- as.matrix(df_transposed)
+
+# Remove empty rows
+df_clean <- df_numeric[rowSums(df_numeric) > 0, ]
+
+# Calculate Jaccard distance matrix
+jaccard_dist <- vegdist(df_clean, method = "jaccard", na.rm = TRUE)
+
+# Perform PCoA
+pcoa <- cmdscale(jaccard_dist, k = 2, eig = TRUE)
+
+# Create PCoA plot
+pcoa_df <- as.data.frame(pcoa$points)
+pcoa_df$Sample <- rownames(pcoa_df)
+
+# Rename PCoA columns
+colnames(pcoa_df) <- c("Axis 1", "Axis 2")
+
+# Add original KO list codes back as column names
+colnames(pcoa_df)[3:(ncol(pcoa_df))] <- ko_list[1:(ncol(pcoa_df)-2)]
+
+# Add Sample column back to pcoa_df
+pcoa_df$Sample <- rownames(pcoa_df)
+
+# Create PCoA plot
+ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample)) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "Axis 1",
+       y = "Axis 2",
+       color = "Sample")
+
+##### Test ####
+
+# Load required libraries
+library(vegan)
+library(ggplot2)
+
+# Assuming df_transposed is your data frame containing presence/absence data
+# Calculate the Jaccard dissimilarity matrix
+jaccard_dist <- vegdist(df_transposed, method = "jaccard")
+
+# Perform PCoA using cmdscale
+pcoa_coords <- cmdscale(jaccard_dist, k = 2)
+
+# Convert PCoA coordinates to a data frame
+pcoa_df <- as.data.frame(pcoa_coords)
+
+# Assign meaningful column names
+colnames(pcoa_df) <- c("Axis.1", "Axis.2")
+
+# Create a plot using ggplot2
+p <- ggplot(pcoa_df, aes(x = Axis.1, y = Axis.2)) +
+  geom_point() +
+  labs(x = "PCoA Axis 1", y = "PCoA Axis 2") +
+  theme_minimal()
+
+# Print the plot
+print(p)
+
+
+
+### TEST 2 ####
+
+set.seed(123)  # Set seed for reproducibility
+
+# Store the original KO list codes
+ko_list <- df$ko_list
+
+# Remove the first column containing sample names
+df_clean <- df[, -1, drop = FALSE]
+
+# Create a new matrix with only 0s and 1s
+df_binary <- df_clean
+df_binary[df_binary != 0] <- 1
+
+# Transpose the matrix
+df_transposed <- t(df_binary)
+
+# Convert matrix to numeric
+df_numeric <- as.matrix(df_transposed)
+
+# Remove empty rows
+df_clean <- df_numeric[rowSums(df_numeric) > 0, ]
+
+# Calculate Jaccard distance matrix
+jaccard_dist <- vegan::vegdist(df_clean, method = "jaccard", na.rm = TRUE)
+
+# Perform PCoA
+pcoa <- stats::cmdscale(jaccard_dist, k = 2, eig = TRUE)
+
+# Create PCoA plot
+pcoa_df <- as.data.frame(pcoa$points)
+pcoa_df$Sample <- rownames(pcoa_df)
+
+# Rename columns
+colnames(pcoa_df) <- c("Axis 1", "Axis 2", "Sample")
+
+# Create PCoA plot without text labels but with a legend
+ggplot2::ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample)) +
+  ggplot2::geom_point(size = 3) +
+  ggplot2::theme_minimal() +
+  ggplot2::labs(title = "PCoA based on Jaccard Distance",
+                x = "Axis 1",
+                y = "Axis 2") +
+  ggplot2::theme(legend.position = "right")
+
+## PLOT 2 ###
+
+# Define colors for each sample
+sample_colors <- c(
+  "treponema_sp01" = "#34B1D9",
+  "treponema_sp02" = "#34B1D9",
+  "treponema_sp03" = "#42D600",
+  "treponema_sp04" = "#42D600",
+  "treponema_sp05" = "#42D600",
+  "treponema_sp06" = "#42D600",
+  "treponema_sp07" = "#42D600",
+  "treponema_sp08" = "#42D600",
+  "treponema_sp09" = "#42D600",
+  "treponema_sp10" = "#42D600",
+  "treponema_sp11" = "#42D600",
+  "treponema_sp12" = "#F0BD03",
+  "treponema_sp13_cattle" = "#CD6D00",
+  "treponema_sp13_goat" = "#F0BD03",
+  "treponema_sp13_human_fiji" = "#D9D9D9",
+  "t_ber_human_ug" = "#34B1D9",
+  "t_ber_pig" = "#D9D9D9",
+  "t_peru_human_peru" = "#D9D9D9",
+  "t_peru_human_ug" = "#34B1D9",
+  "t_suc_human_ug" = "#34B1D9",
+  "t_suc_pig" = "#D9D9D9",
+  "t_pedis" = "#D9D9D9",
+  "t_pallidum" = "#D9D9D9"
+)
+
+# Create improved PCoA plot with custom colors
+ggplot2::ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample)) +
+  ggplot2::geom_point(size = 4, shape = 19) +
+  ggplot2::scale_color_manual(values = sample_colors) +
+  ggplot2::theme_minimal() +
+  ggplot2::labs(title = "PCoA based on Jaccard Distance",
+                x = "PCoA Axis 1",
+                y = "PCoA Axis 2",
+                color = "Sample") +
+  ggplot2::theme(legend.position = "right")
+
+
+## PLOT 5 ### BEST
+
+# Define colors for each sample
+sample_colors <- c(
+  "treponema_sp01" = "#34B1D9",
+  "treponema_sp02" = "#34B1D9",
+  "treponema_sp03" = "#42D600",
+  "treponema_sp04" = "#42D600",
+  "treponema_sp05" = "#42D600",
+  "treponema_sp06" = "#42D600",
+  "treponema_sp07" = "#42D600",
+  "treponema_sp08" = "#42D600",
+  "treponema_sp09" = "#42D600",
+  "treponema_sp10" = "#42D600",
+  "treponema_sp11" = "#42D600",
+  "treponema_sp12" = "#F0BD03",
+  "treponema_sp13_cattle" = "#CD6D00",
+  "treponema_sp13_goat" = "#F0BD03",
+  "treponema_sp13_human_fiji" = "#D9D9D9",
+  "t_ber_human_ug" = "#34B1D9",
+  "t_ber_pig" = "#D9D9D9",
+  "t_peru_human_peru" = "#D9D9D9",
+  "t_peru_human_ug" = "#34B1D9",
+  "t_suc_human_ug" = "#34B1D9",
+  "t_suc_pig" = "#D9D9D9",
+  "t_pedis" = "#D9D9D9",
+  "t_pallidum" = "#D9D9D9"
+)
+
+# Define custom legend labels
+legend_labels <- c(
+  "Human_UG",
+  "Gorilla_UG",
+  "Goat_UG",
+  "Cattle_UG",
+  "13Ref_Human_FJ",
+  expression("Tb -" ~ italic("T. berlinense")),
+  expression("TbRef_Pig" ~ italic("T. berlinense")),
+  expression("Tper -" ~ italic("T. peruense")),
+  expression("TperRef_Human" ~ italic("T. peruense")),
+  expression("Ts" ~ italic("T. succinifaciens")),
+  expression("TsRef_Pig" ~ italic("T. succinifaciens")),
+  expression("Tped_Ref_Cattle" ~ italic("T. pedis")),
+  expression("TpaRef_Human" ~ italic("T. pallidum"))
+)
+
+#### TEST PLOT ####
+
+library(ggplot2)
+
+# Define custom colors for each sample
+sample_colors <- c(
+  "treponema_sp01" = "#34B1D9",
+  "treponema_sp02" = "#34B1D9",
+  "treponema_sp03" = "#42D600",
+  "treponema_sp04" = "#42D600",
+  "treponema_sp05" = "#42D600",
+  "treponema_sp06" = "#42D600",
+  "treponema_sp07" = "#42D600",
+  "treponema_sp08" = "#42D600",
+  "treponema_sp09" = "#42D600",
+  "treponema_sp10" = "#42D600",
+  "treponema_sp11" = "#42D600",
+  "treponema_sp12" = "#F0BD03",
+  "treponema_sp13_cattle" = "#CD6D00",
+  "treponema_sp13_goat" = "#F0BD03",
+  "treponema_sp13_human_fiji" = "#899499",
+  "t_ber_human_ug" = "#34B1D9",
+  "t_ber_pig" = "#899499",
+  "t_peru_human_peru" = "#899499",
+  "t_peru_human_ug" = "#34B1D9",
+  "t_suc_human_ug" = "#34B1D9",
+  "t_suc_pig" = "#899499",
+  "t_pedis" = "#899499",
+  "t_pallidum" = "#899499"
+)
+
+# Define custom legend labels
+legend_labels <- c(
+  "Human_UG",
+  "Gorilla_UG",
+  "Goat_UG",
+  "Cattle_UG",
+  "13Ref_Human_FJ",
+  expression("Tb -" ~ italic("T. berlinense")),
+  expression("TbRef_Pig" ~ italic("T. berlinense")),
+  expression("Tper -" ~ italic("T. peruense")),
+  expression("TperRef_Human" ~ italic("T. peruense")),
+  expression("Ts" ~ italic("T. succinifaciens")),
+  expression("TsRef_Pig" ~ italic("T. succinifaciens")),
+  expression("TpedRef_Cattle" ~ italic("T. pedis")),
+  expression("TpaRef_Human" ~ italic("T. pallidum"))
+)
+
+# Function to create PCoA plot with custom legend labels
+create_pcoa_plot <- function(pcoa_df, sample_colors, legend_labels) {
+  ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample)) +
+    geom_point(size = 4, shape = 19) +
+    scale_color_manual(values = sample_colors, labels = legend_labels) +
+    theme_minimal() +
+    labs(title = "PCoA based on Jaccard Distance",
+         x = "PCoA Axis 1",
+         y = "PCoA Axis 2",
+         color = "Sample") +
+    theme(legend.position = "right")
+}
+
+# Create PCoA plot with custom legend labels
+pcoa_plot <- create_pcoa_plot(pcoa_df, sample_colors, legend_labels)
+
+# Print the plot
+print(pcoa_plot)
+
+#### test ###
+
+# Filter sample_colors and legend_labels to include only samples present in pcoa_df
+sample_colors_filtered <- sample_colors[match(rownames(pcoa_df), names(sample_colors))]
+legend_labels_filtered <- legend_labels[match(rownames(pcoa_df), names(legend_labels))]
+
+# Create PCoA plot with custom legend labels
+pcoa_plot <- ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample)) +
+  geom_point(size = 10, alpha = 0.6) +  # Add transparency to the bubbles
+  scale_color_manual(values = sample_colors_filtered, labels = legend_labels_filtered) +
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "PCoA Axis 1",
+       y = "PCoA Axis 2",
+       color = "Sample") +
+  theme(legend.position = "topright")
+
+# Print the plot
+print(pcoa_plot)
+
+
+#### test2 ####
+
+# Add a new column to indicate whether each point should be labeled
+pcoa_df$label <- ifelse(1:nrow(pcoa_df) <= 13, as.character(1:13), "")
+
+# Filter sample_colors and legend_labels to include only samples present in pcoa_df
+sample_colors_filtered <- sample_colors[match(rownames(pcoa_df), names(sample_colors))]
+legend_labels_filtered <- legend_labels[match(rownames(pcoa_df), names(legend_labels))]
+
+# Create PCoA plot with custom legend labels
+pcoa_plot <- ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample)) +
+  geom_point(size = 10, alpha = 0.6) +  # Add transparency to the bubbles
+  geom_text(aes(label = label), size = 3, vjust = -0.5) +  # Add numbers from 1 to 13 inside the bubbles
+  scale_color_manual(values = sample_colors_filtered, labels = legend_labels_filtered) +
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "PCoA Axis 1",
+       y = "PCoA Axis 2",
+       color = "Sample") +
+  theme(legend.position = "topright")
+
+# Print the plot
+print(pcoa_plot)
+
+###### GREAT ###
+
+# Add a new column to indicate whether each point should be labeled
+pcoa_df$label <- ifelse(1:nrow(pcoa_df) <= 13, as.character(1:13), "")
+
+# Filter sample_colors and legend_labels to include only samples present in pcoa_df
+sample_colors_filtered <- sample_colors[match(rownames(pcoa_df), names(sample_colors))]
+legend_labels_filtered <- legend_labels[match(rownames(pcoa_df), names(legend_labels))]
+
+# Create PCoA plot with custom legend labels
+pcoa_plot <- ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample)) +
+  geom_point(size = 10, alpha = 0.6) +  # Add transparency to the bubbles
+  geom_text(aes(label = label), size = 3, vjust = 0.5, hjust = 0.5, color = "black") +  # Centralize and make font color black
+  scale_color_manual(values = sample_colors_filtered, labels = legend_labels_filtered) +
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "PCoA Axis 1",
+       y = "PCoA Axis 2",
+       color = "Sample") +
+  theme(legend.position = "topright")
+
+# Print the plot
+print(pcoa_plot)
+
+########### IMPROVING ####
+
+# Add a new column to indicate whether each point should be labeled
+pcoa_df$label <- ifelse(1:nrow(pcoa_df) <= 13, as.character(1:13), "")
+pcoa_df$label[14] <- "13"  # Add number 13 to the 14th row
+
+# Filter sample_colors and legend_labels to include only samples present in pcoa_df
+sample_colors_filtered <- sample_colors[match(rownames(pcoa_df), names(sample_colors))]
+legend_labels_filtered <- legend_labels[match(rownames(pcoa_df), names(legend_labels))]
+
+# Create PCoA plot with custom legend labels
+pcoa_plot <- ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample)) +
+  geom_point(size = 10, alpha = 0.6) +  # Add transparency to the bubbles
+  geom_text(aes(label = label), size = 3, vjust = 0.5, hjust = 0.5, color = "black") +  # Centralize and make font color black
+  scale_color_manual(values = sample_colors_filtered, labels = legend_labels_filtered) +
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "PCoA Axis 1",
+       y = "PCoA Axis 2",
+       color = "Sample") +
+  theme(legend.position = "topright")
+
+# Print the plot
+print(pcoa_plot)
+
+##### IMPROVING @ ####
+
+# Add labels to the corresponding bubbles
+pcoa_df$label <- ifelse(1:nrow(pcoa_df) <= 13, as.character(1:13), "")
+pcoa_df$label[14] <- "13"
+pcoa_df$label[15] <- "A"
+pcoa_df$label[16] <- "B"
+pcoa_df$label[17] <- "B"
+pcoa_df$label[18] <- "C"
+pcoa_df$label[19] <- "C"
+pcoa_df$label[20] <- "D"
+pcoa_df$label[21] <- "D"
+pcoa_df$label[22] <- "E"
+pcoa_df$label[23] <- "F"
+
+# Filter sample_colors and legend_labels to include only samples present in pcoa_df
+sample_colors_filtered <- sample_colors[match(rownames(pcoa_df), names(sample_colors))]
+legend_labels_filtered <- legend_labels[match(rownames(pcoa_df), names(legend_labels))]
+
+# Create PCoA plot with custom legend labels
+pcoa_plot <- ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample)) +
+  geom_point(size = 16, alpha = 0.6) +  # Add transparency to the bubbles
+  geom_text(aes(label = label), size = 3, vjust = 0.5, hjust = 0.5, color = "black") +  # Centralize and make font color black
+  scale_color_manual(values = sample_colors_filtered, labels = legend_labels_filtered) +
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "PCoA 1",
+       y = "PCoA 2",
+       color = "Sample") +
+  theme(legend.position = "topright")
+
+# Print the plot
+print(pcoa_plot)
+
+
+#### TEST
+
+# Add labels to the corresponding bubbles
+pcoa_df$label <- ifelse(1:nrow(pcoa_df) <= 13, as.character(1:13), "")
+pcoa_df$label[14] <- "13"
+pcoa_df$label[15] <- "A"
+pcoa_df$label[16] <- "B"
+pcoa_df$label[17] <- "B"
+pcoa_df$label[18] <- "C"
+pcoa_df$label[19] <- "C"
+pcoa_df$label[20] <- "D"
+pcoa_df$label[21] <- "D"
+pcoa_df$label[22] <- "E"
+pcoa_df$label[23] <- "F"
+
+# Define shape values for each label
+pcoa_df$shape <- ifelse(pcoa_df$label %in% c("A", "B", "C", "D", "E", "F"), "square", "circle")
+
+# Filter sample_colors and legend_labels to include only samples present in pcoa_df
+sample_colors_filtered <- sample_colors[match(rownames(pcoa_df), names(sample_colors))]
+legend_labels_filtered <- legend_labels[match(rownames(pcoa_df), names(legend_labels))]
+
+# Create PCoA plot with custom legend labels
+pcoa_plot <- ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample, shape = shape)) +
+  geom_point(size = 16, alpha = 0.6) +  # Add transparency to the bubbles
+  geom_text(aes(label = label), size = 3, vjust = 0.5, hjust = 0.5, color = "black") +  # Centralize and make font color black
+  scale_color_manual(values = sample_colors_filtered, labels = legend_labels_filtered) +
+  scale_shape_manual(values = c("circle" = 16, "square" = 15)) +  # Define sizes for circles and squares
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "PCoA Axis 1",
+       y = "PCoA Axis 2",
+       color = "Sample") +
+  theme(legend.position = "topright")
+
+# Print the plot
+print(pcoa_plot)
+
+
+
+
+# TEST smaller squares ##
+
+# Define custom shapes for samples with specific colors
+sample_shapes <- c(
+  "treponema_sp01" = 19,
+  "treponema_sp02" = 19,
+  "treponema_sp03" = 19,
+  "treponema_sp04" = 19,
+  "treponema_sp05" = 19,
+  "treponema_sp06" = 19,
+  "treponema_sp07" = 19,
+  "treponema_sp08" = 19,
+  "treponema_sp09" = 19,
+  "treponema_sp10" = 19,
+  "treponema_sp11" = 19,
+  "treponema_sp12" = 19,
+  "treponema_sp13_cattle" = 19,
+  "treponema_sp13_goat" = 19,
+  "treponema_sp13_human_fiji" = 15,
+  "t_ber_human_ug" = 19,
+  "t_ber_pig" = 15,
+  "t_peru_human_peru" = 15,
+  "t_peru_human_ug" = 19,
+  "t_suc_human_ug" = 19,
+  "t_suc_pig" = 15,
+  "t_pedis" = 15,
+  "t_pallidum" = 15
+)
+
+# Create PCoA plot with custom legend labels and shapes
+pcoa_plot <- ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample, shape = Sample)) +
+  geom_point(size = 18, alpha = 0.6) +  # Add transparency to the bubbles
+  geom_text(aes(label = label), size = 3, vjust = 0.5, hjust = 0.5, color = "black") +  # Centralize and make font color black
+  scale_color_manual(values = sample_colors, labels = legend_labels) +
+  scale_shape_manual(values = sample_shapes) +  # Manually set shapes based on colors
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "PCoA 1",
+       y = "PCoA 2",
+       color = "Sample") +
+  theme(legend.position = "topright")
+
+# Print the plot
+print(pcoa_plot)
+
+#############
+
+# Define custom shapes for samples with specific colors
+sample_shapes <- c(
+  "treponema_sp01" = 19,
+  "treponema_sp02" = 19,
+  "treponema_sp03" = 19,
+  "treponema_sp04" = 19,
+  "treponema_sp05" = 19,
+  "treponema_sp06" = 19,
+  "treponema_sp07" = 19,
+  "treponema_sp08" = 19,
+  "treponema_sp09" = 19,
+  "treponema_sp10" = 19,
+  "treponema_sp11" = 19,
+  "treponema_sp12" = 19,
+  "treponema_sp13_cattle" = 19,
+  "treponema_sp13_goat" = 19,
+  "treponema_sp13_human_fiji" = 15,
+  "t_ber_human_ug" = 19,
+  "t_ber_pig" = 15,
+  "t_peru_human_peru" = 15,
+  "t_peru_human_ug" = 19,
+  "t_suc_human_ug" = 19,
+  "t_suc_pig" = 15,
+  "t_pedis" = 15,
+  "t_pallidum" = 15
+)
+
+# Create PCoA plot with custom legend labels and shapes
+pcoa_plot <- ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample, shape = Sample)) +
+  geom_point(size = ifelse(pcoa_df$Sample %in% c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "16", "19", "20"), 5, 18), alpha = 0.6) +  # Add transparency to the bubbles
+  geom_text(aes(label = label), size = 3, vjust = 0.5, hjust = 0.5, color = "black") +  # Centralize and make font color black
+  scale_color_manual(values = sample_colors, labels = legend_labels) +
+  scale_shape_manual(values = sample_shapes) +  # Manually set shapes based on colors
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "PCoA Axis 1",
+       y = "PCoA Axis 2",
+       color = "Sample") +
+  theme(legend.position = "topright")
+
+# Print the plot
+print(pcoa_plot)
+
+###########
+
+# Create PCoA plot with custom legend labels and shapes
+pcoa_plot <- ggplot(pcoa_df, aes(x = `Axis 1`, y = `Axis 2`, color = Sample, shape = Sample)) +
+  geom_point(size = ifelse(pcoa_df$Sample %in% c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "16", "19", "20"), 5, 18), alpha = 0.6) +  # Add transparency to the bubbles
+  geom_text(aes(label = label), size = 3, vjust = 0.5, hjust = 0.5, color = "black") +  # Centralize and make font color black
+  scale_color_manual(values = sample_colors, labels = legend_labels) +
+  scale_shape_manual(values = sample_shapes) +  # Manually set shapes based on colors
+  theme_minimal() +
+  labs(title = "PCoA based on Jaccard Distance",
+       x = "PCoA Axis 1",
+       y = "PCoA Axis 2",
+       color = "Sample") +
+  theme(legend.position = "topright")
+
+# Print the plot
+print(pcoa_plot)
+
+
+
+
+###########
+
+# Plot PCoA with sample names, custom bubble size, transparency, and colors
+plot(pcoa_result[, 1], pcoa_result[, 2], xlab = "PCoA1", ylab = "PCoA2", main = "PCoA Plot",
+     pch = ifelse(seq_along(pcoa_result[,1]) %in% c(15, 17, 18, 21, 22, 23), 15, 19),
+     col = adjustcolor(colors, alpha.f = alpha), cex = ifelse(seq_along(pcoa_result[,1]) %in% c(15, 17, 18, 21, 22, 23), 5, bubble_size))

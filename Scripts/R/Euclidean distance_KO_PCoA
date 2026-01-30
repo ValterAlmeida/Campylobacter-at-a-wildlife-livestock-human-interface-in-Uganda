@@ -1,0 +1,338 @@
+# Load data
+data_matrix <- read.csv("/Users/valter/Downloads/R_Microbiome/MAGs/Kegg/ko_prevotella.csv", header = TRUE, row.names = 1)
+
+# Replace missing values with column means
+data_matrix[is.na(data_matrix)] <- colMeans(data_matrix, na.rm = TRUE)
+
+# Convert to matrix
+data_matrix <- as.matrix(data_matrix)
+
+# Transpose the data matrix
+transposed_data_matrix <- t(data_matrix)
+
+# Calculate distance matrix (example using Euclidean distance)
+dist_matrix <- dist(transposed_data_matrix)
+
+# Perform PCoA analysis
+library(ape)
+pcoa_result <- try(pcoa(dist_matrix))
+
+# Check for errors
+if (inherits(pcoa_result, "try-error")) {
+  print("Error in PCoA analysis. Please check your data matrix for issues.")
+} else {
+  # Extract coordinates from pcoa_result$vectors for the first two axes
+  coords <- pcoa_result$vectors[, 1:2]
+
+  # Plot the PCoA
+  plot(coords, type = "n", xlab = "Axis 1", ylab = "Axis 2")  # Plot empty plot first
+
+  # Add points for samples 1 to 8 (blue) with bigger bubbles and transparency
+  points(coords[2:8, ], col = rgb(0, 0, 1, alpha = 0.5), pch = 20, cex = 2)
+
+  # Add points for samples 9 to 14 (green) with bigger bubbles and transparency
+  points(coords[9:14, ], col = rgb(0, 1, 0, alpha = 0.5), pch = 20, cex = 2)
+
+  # Add points for sample 15 (orange) with bigger bubbles and transparency
+  points(coords[15, ], col = rgb(1, 0.5, 0, alpha = 0.5), pch = 20, cex = 2)
+
+  # Add legend outside the plot area
+  legend("topright", legend = c("Samples 1-8", "Samples 9-14", "Sample 15"),
+         col = c(rgb(0, 0, 1, alpha = 0.5), rgb(0, 1, 0, alpha = 0.5), rgb(1, 0.5, 0, alpha = 0.5)),
+         pch = 20, title = "Groups", inset = c(0.05, 0.05))
+}
+
+### COLOURS #####
+
+# Load data
+data_matrix <- read.csv("/Users/valter/Downloads/R_Microbiome/MAGs/Kegg/ko_prevotella.csv", header = TRUE, row.names = 1)
+
+# Replace missing values with column means
+data_matrix[is.na(data_matrix)] <- colMeans(data_matrix, na.rm = TRUE)
+
+# Convert to matrix
+data_matrix <- as.matrix(data_matrix)
+
+# Transpose the data matrix
+transposed_data_matrix <- t(data_matrix)
+
+# Calculate distance matrix (example using Euclidean distance)
+dist_matrix <- dist(transposed_data_matrix)
+
+# Perform PCoA analysis
+library(ape)
+pcoa_result <- try(pcoa(dist_matrix))
+
+# Check for errors
+if (inherits(pcoa_result, "try-error")) {
+  print("Error in PCoA analysis. Please check your data matrix for issues.")
+} else {
+  # Extract coordinates from pcoa_result$vectors for the first two axes
+  coords <- pcoa_result$vectors[, 1:2]
+
+  # Plot the PCoA
+  plot(coords, type = "n", xlab = "Axis 1", ylab = "Axis 2")  # Plot empty plot first
+
+  # Define colors
+  sample_colors <- c("#33CEFF", "#34B1D9", "#0092C1", "#9FE8FF", "#6BA2B3", "#5AD8FF", "#C1EDFB",
+                     "#D3FBC1", "#AEFF8A", "#94B685", "#6DA554", "#39A509", "#42D600", "#257600", "#F0BD03")
+
+  # Add points for all samples with specified colors
+  points(coords, col = sample_colors, pch = 20, cex = 2)
+
+  # Add legend outside the plot area
+  legend("topright", legend = paste("Sample", 1:15), col = sample_colors, pch = 20, title = "Samples", inset = c(0.05, 0.05))
+}
+
+######################################
+
+# Load data
+data_matrix <- read.csv("/Users/valter/Downloads/R_Microbiome/MAGs/Kegg/ko_prevotella.csv", header = TRUE, row.names = 1)
+
+# Replace missing values with column means
+data_matrix[is.na(data_matrix)] <- colMeans(data_matrix, na.rm = TRUE)
+
+# Convert to matrix
+data_matrix <- as.matrix(data_matrix)
+
+# Transpose the data matrix
+transposed_data_matrix <- t(data_matrix)
+
+# Calculate distance matrix (example using Euclidean distance)
+dist_matrix <- dist(transposed_data_matrix)
+
+# Perform PCoA analysis
+library(ape)
+pcoa_result <- try(pcoa(dist_matrix))
+
+# Check for errors
+if (inherits(pcoa_result, "try-error")) {
+  print("Error in PCoA analysis. Please check your data matrix for issues.")
+} else {
+  # Extract coordinates from pcoa_result$vectors for the first two axes
+  coords <- pcoa_result$vectors[, 1:2]
+
+  # Plot the PCoA
+  plot(coords, type = "n", xlab = "Axis 1", ylab = "Axis 2")  # Plot empty plot first
+
+  # Define colors
+  sample_colors <- c("#33CEFF", "#34B1D9", "#0092C1", "#9FE8FF", "#6BA2B3", "#5AD8FF", "#C1EDFB",
+                     "#D3FBC1", "#AEFF8A", "#94B685", "#6DA554", "#39A509", "#42D600", "#257600", "#F0BD03")
+
+  # Add points for all samples with specified colors, larger size, and transparency
+  points(coords, col = rgb(t(col2rgb(sample_colors)) / 255), pch = 20, cex = 3, alpha = 0.7)
+
+  # Add legend outside the plot area
+  legend("topright", legend = paste("Sample", 1:15), col = sample_colors, pch = 20, title = "Samples", inset = c(0.05, 0.05))
+}
+
+########################################
+
+# Load data
+data_matrix <- read.csv("/Users/valter/Downloads/R_Microbiome/MAGs/Kegg/ko_prevotella.csv", header = TRUE, row.names = 1)
+
+# Replace missing values with column means
+data_matrix[is.na(data_matrix)] <- colMeans(data_matrix, na.rm = TRUE)
+
+# Convert to matrix
+data_matrix <- as.matrix(data_matrix)
+
+# Transpose the data matrix
+transposed_data_matrix <- t(data_matrix)
+
+# Calculate distance matrix (example using Euclidean distance)
+dist_matrix <- dist(transposed_data_matrix)
+
+# Perform PCoA analysis
+library(ape)
+pcoa_result <- try(pcoa(dist_matrix))
+
+# Check for errors
+if (inherits(pcoa_result, "try-error")) {
+  print("Error in PCoA analysis. Please check your data matrix for issues.")
+} else {
+  # Extract coordinates from pcoa_result$vectors for the first two axes
+  coords <- pcoa_result$vectors[, 1:2]
+
+  # Plot the PCoA
+  plot(coords, type = "n", xlab = "Axis 1", ylab = "Axis 2")  # Plot empty plot first
+
+  # Define colors
+  sample_colors <- c("#33CEFF", "#34B1D9", "#0092C1", "#9FE8FF", "#6BA2B3", "#5AD8FF", "#C1EDFB",
+                     "#D3FBC1", "#AEFF8A", "#94B685", "#6DA554", "#39A509", "#42D600", "#257600", "#F0BD03")
+
+  # Add points for all samples with specified colors, larger size, and transparency
+  points(coords, col = adjustcolor(sample_colors, alpha.f = 0.5), pch = 20, cex = 3)
+
+  # Add legend outside the plot area
+  legend("topright", legend = paste("Sample", 1:15), col = sample_colors, pch = 20, title = "Samples", inset = c(0.05, 0.05))
+}
+
+## LEGEND #####
+
+# Load data
+data_matrix <- read.csv("/Users/valter/Downloads/R_Microbiome/MAGs/Kegg/ko_prevotella.csv", header = TRUE, row.names = 1)
+
+# Replace missing values with column means
+data_matrix[is.na(data_matrix)] <- colMeans(data_matrix, na.rm = TRUE)
+
+# Convert to matrix
+data_matrix <- as.matrix(data_matrix)
+
+# Transpose the data matrix
+transposed_data_matrix <- t(data_matrix)
+
+# Calculate distance matrix (example using Euclidean distance)
+dist_matrix <- dist(transposed_data_matrix)
+
+# Perform PCoA analysis
+library(ape)
+pcoa_result <- try(pcoa(dist_matrix))
+
+# Check for errors
+if (inherits(pcoa_result, "try-error")) {
+  print("Error in PCoA analysis. Please check your data matrix for issues.")
+} else {
+  # Extract coordinates from pcoa_result$vectors for the first two axes
+  coords <- pcoa_result$vectors[, 1:2]
+
+  # Plot the PCoA
+  plot(coords, type = "n", xlab = "Axis 1", ylab = "Axis 2")  # Plot empty plot first
+
+  # Define colors
+  sample_colors <- c("#33CEFF", "#34B1D9", "#0092C1", "#9FE8FF", "#6BA2B3", "#5AD8FF", "#C1EDFB",
+                     "#D3FBC1", "#AEFF8A", "#94B685", "#6DA554", "#39A509", "#42D600", "#257600", "#F0BD03")
+
+  # Add points for all samples with specified colors, larger size, and transparency
+  points(coords, col = adjustcolor(sample_colors, alpha.f = 0.5), pch = 20, cex = 3)
+}
+
+### TEST 1 #### PERFECT
+
+# Load data
+data_matrix <- read.csv("/Users/valter/Downloads/R_Microbiome/MAGs/Kegg/ko_prevotella.csv", header = TRUE, row.names = 1)
+
+# Replace missing values with column means
+data_matrix[is.na(data_matrix)] <- colMeans(data_matrix, na.rm = TRUE)
+
+# Convert to matrix
+data_matrix <- as.matrix(data_matrix)
+
+# Transpose the data matrix
+transposed_data_matrix <- t(data_matrix)
+
+# Calculate distance matrix (example using Euclidean distance)
+dist_matrix <- dist(transposed_data_matrix)
+
+# Perform PCoA analysis
+library(ape)
+pcoa_result <- try(pcoa(dist_matrix))
+
+# Check for errors
+if (inherits(pcoa_result, "try-error")) {
+  print("Error in PCoA analysis. Please check your data matrix for issues.")
+} else {
+  # Extract coordinates from pcoa_result$vectors for the first two axes
+  coords <- pcoa_result$vectors[, 1:2]
+
+  # Plot the PCoA
+  plot(coords, type = "n", xlab = "Axis 1", ylab = "Axis 2")  # Plot empty plot first
+
+  # Define colors
+  sample_colors <- c("#0674B3", "#0674B3", "#00C5FF", "#0674B3", "#0674B3", "#00C5FF", "#0674B3",
+                     "#327A03", "#327A03", "#327A03", "#327A03", "#5DD32D", "#5DD32D", "#327A03", "#F09827")
+
+  # Add points for all samples with specified colors, larger size, and transparency
+  points(coords, col = adjustcolor(sample_colors, alpha.f = 0.4), pch = 20, cex = 6)
+}
+
+# LEGEND ###
+
+# Load data
+data_matrix <- read.csv("/Users/valter/Downloads/R_Microbiome/MAGs/Kegg/ko_prevotella.csv", header = TRUE, row.names = 1)
+
+# Replace missing values with column means
+data_matrix[is.na(data_matrix)] <- colMeans(data_matrix, na.rm = TRUE)
+
+# Convert to matrix
+data_matrix <- as.matrix(data_matrix)
+
+# Transpose the data matrix
+transposed_data_matrix <- t(data_matrix)
+
+# Calculate distance matrix (example using Euclidean distance)
+dist_matrix <- dist(transposed_data_matrix)
+
+# Perform PCoA analysis
+library(ape)
+pcoa_result <- try(pcoa(dist_matrix))
+
+# Check for errors
+if (inherits(pcoa_result, "try-error")) {
+  print("Error in PCoA analysis. Please check your data matrix for issues.")
+} else {
+  # Extract coordinates from pcoa_result$vectors for the first two axes
+  coords <- pcoa_result$vectors[, 1:2]
+
+  # Plot the PCoA
+  plot(coords, type = "n", xlab = "Axis 1", ylab = "Axis 2")  # Plot empty plot first
+
+  # Define colors
+  sample_colors <- c("#0674B3", "#0674B3", "#0674B3", "#0674B3", "#0674B3", "#0674B3", "#0674B3",
+                     "#327A03", "#327A03", "#327A03", "#327A03", "#327A03", "#327A03", "#327A03", "#F09827")
+
+  # Add points for all samples with specified colors, larger size, and transparency
+  points(coords, col = adjustcolor(sample_colors, alpha.f = 0.4), pch = 20, cex = 6)
+
+  # Add sample numbers inside the bubbles
+  text(coords, labels = 1:15, col = "black", cex = 0.6)
+}
+
+#### ADDING LEGEND ####
+
+# Load data
+data_matrix <- read.csv("/Users/valter/Downloads/R_Microbiome/MAGs/Kegg/ko_prevotella.csv", header = TRUE, row.names = 1)
+
+# Replace missing values with column means
+data_matrix[is.na(data_matrix)] <- colMeans(data_matrix, na.rm = TRUE)
+
+# Convert to matrix
+data_matrix <- as.matrix(data_matrix)
+
+# Transpose the data matrix
+transposed_data_matrix <- t(data_matrix)
+
+# Calculate distance matrix (example using Euclidean distance)
+dist_matrix <- dist(transposed_data_matrix)
+
+# Perform PCoA analysis
+library(ape)
+pcoa_result <- try(pcoa(dist_matrix))
+
+# Check for errors
+if (inherits(pcoa_result, "try-error")) {
+  print("Error in PCoA analysis. Please check your data matrix for issues.")
+} else {
+  # Extract coordinates from pcoa_result$vectors for the first two axes
+  coords <- pcoa_result$vectors[, 1:2]
+
+  # Plot the PCoA
+  plot(coords, type = "n", xlab = "Axis 1", ylab = "Axis 2")  # Plot empty plot first
+
+  # Define colors
+  sample_colors <- c("#0674B3", "#0674B3", "#0674B3", "#0674B3", "#0674B3", "#0674B3", "#0674B3",
+                     "#327A03", "#327A03", "#327A03", "#327A03", "#327A03", "#327A03", "#327A03", "#F09827")
+
+  # Add points for all samples with specified colors, larger size, and transparency
+  points(coords, col = adjustcolor(sample_colors, alpha.f = 0.4), pch = 20, cex = 6)
+
+  # Add sample numbers inside the bubbles
+  text(coords, labels = 1:15, col = "black", cex = 0.7)
+
+  # Add legend
+  legend("topright",
+         title = "Putative Novel Prevotella sp: Functional Similarities",
+         legend = c("Human", "Gorilla", "Goat"),
+         col = c("#0674B3", "#327A03", "#F09827"),
+         pch = 15, cex = 1.0, bty = "n")
+}

@@ -1,0 +1,390 @@
+# Alpha diversity - Facet_grid
+
+# Read in the data
+df <- read.csv("/Users/valter/Downloads/Kraken2/alpha_diversity_Uganda_1.csv", header = TRUE)
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+
+# Define the order of the groups
+group_order <- c("Wild_gorilla", "Habituated_gorilla", "Human_hospital", "Human_community", "Cattle", "Goat")
+
+# Reorder the levels of the Group variable
+df$Group <- factor(df$Group, levels = group_order)
+
+# Define colours for the boxplot and points
+my_colors <- c("#38761d", "#d9ead3", "#3d85c6", "#cfe2f3", "#f6b26b", "#ffd966")
+
+# Run ANOVA test
+anova_result <- aov(Alpha_diversity ~ Group, data = df)
+
+# Display ANOVA test results
+summary(anova_result)
+tukey_result <- TukeyHSD(anova_result)
+tukey_result
+
+# Create facet grid using ggplot2
+ggplot(df, aes(y = Alpha_diversity, fill = Group)) +
+  geom_boxplot(alpha = 0.6, colour = "black") +
+  scale_fill_manual(values = my_colors) +
+  theme_classic() +
+  labs(y = "Shannon's diversity") +
+  scale_x_discrete(labels = NULL)
+
+
+#TEST 1
+
+# Read in the data
+df <- read.csv("/Users/valter/Downloads/Kraken2/alpha_diversity_Uganda_1.csv", header = TRUE)
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+
+# Define the order of the groups
+group_order <- c("Wild_gorilla", "Habituated_gorilla", "Human_hospital", "Human_community", "Cattle", "Goat")
+
+# Reorder the levels of the Group variable
+df$Group <- factor(df$Group, levels = group_order)
+
+# Define colours for the boxplot and points
+my_colors <- c("#38761d", "#d9ead3", "#3d85c6", "#cfe2f3", "#f6b26b", "#ffd966")
+
+# Run ANOVA test
+anova_result <- aov(Alpha_diversity ~ Group, data = df)
+
+# Display ANOVA test results
+summary(anova_result)
+tukey_result <- TukeyHSD(anova_result)
+tukey_result
+
+# Create facet grid using ggplot2
+ggplot(df, aes(y = Alpha_diversity, fill = Group)) +
+  geom_boxplot(alpha = 0.8, colour = "black") +
+  scale_fill_manual(values = my_colors) +
+  theme_classic() +
+  labs(y = "Shannon's diversity") +
+  scale_x_discrete(labels = NULL) +
+  theme(panel.spacing.x = unit(1, "lines"),
+        plot.margin = margin(5, 5, 5, 5),
+        axis.title.y = element_text(size = 20))
+
+#TEST 2
+
+# Create facet grid using ggplot2
+ggplot(df, aes(y = Alpha_diversity, fill = Group)) +
+  geom_boxplot(alpha = 0.6, colour = "black") +
+  scale_fill_manual(values = my_colors) +
+  theme_classic() +
+  labs(y = "Shannon's diversity") +
+  scale_x_discrete(labels = NULL) +
+  theme(panel.spacing.x = unit(1, "lines"),
+        plot.margin = margin(5, 5, 5, 5),
+        legend.position = c(0.95, 0.95),  # Adjust the legend position
+        legend.justification = c(1, 1),  # Adjust the justification of the legend
+        legend.box.just = "right",  # Adjust the position of the legend box
+        axis.title.y = element_text(size = 20),  # Adjust the Y-axis title size
+        legend.text = element_text(size = 14),  # Increase the legend label size
+        legend.title = element_text(size = 16))  # Increase the legend title size
+
+#TEST 2
+
+# Create facet grid using ggplot2
+ggplot(df, aes(y = Alpha_diversity, fill = Group)) +
+  geom_boxplot(alpha = 0.6, colour = "black") +
+  scale_fill_manual(values = my_colors) +
+  theme_classic() +
+  labs(y = "Shannon's diversity") +
+  xlim(-0.4, 0.8) +
+  theme(plot.margin = margin(5, 5, 5, 15),  # Adjust the margin inside the plot
+        plot.background = element_rect(fill = "white", color = NA),  # Set plot background color
+        panel.background = element_rect(fill = "white", color = NA),  # Set panel background color
+        legend.position = c(0.95, 0.95),  # Adjust the legend position
+        legend.justification = c(1, 1),  # Adjust the justification of the legend
+        legend.box.just = "right",  # Adjust the position of the legend box
+        axis.title.y = element_text(size = 20),  # Adjust the Y-axis title size
+        axis.text.y = element_text(margin = margin(r = 10)),  # Adjust the margin for y-axis labels
+        axis.ticks.y = element_blank(),  # Remove y-axis ticks
+        legend.text = element_text(size = 14),  # Increase the legend label size
+        legend.title = element_text(size = 16))  # Increase the legend title size
+
+#TEST 3
+
+# Create facet grid using ggplot2
+plot <- ggplot(df, aes(y = Alpha_diversity, fill = Group)) +
+  geom_boxplot(alpha = 0.8, colour = "black") +
+  scale_fill_manual(values = my_colors) +
+  theme_classic() +
+  labs(y = "Shannon's diversity") +
+  xlim(-0.4, 0.8) +
+  theme(plot.margin = margin(5, 5, 5, 15),  # Adjust the margin inside the plot
+        plot.background = element_rect(fill = "white", color = NA),  # Set plot background color
+        panel.background = element_rect(fill = "white", color = NA),  # Set panel background color
+        legend.position = c(0.95, 0.95),  # Adjust the legend position
+        legend.justification = c(1, 1),  # Adjust the justification of the legend
+        legend.box.just = "right",  # Adjust the position of the legend box
+        axis.title.y = element_text(size = 20),  # Adjust the Y-axis title size
+        axis.text.y = element_text(size = 14, margin = margin(r = 10)),  # Adjust the font size and margin for y-axis labels
+        axis.ticks.y = element_blank(),  # Remove y-axis ticks
+        legend.text = element_text(size = 14),  # Increase the legend label size
+        legend.title = element_text(size = 16))  # Increase the legend title size
+
+# Save the plot as a PDF file
+ggsave("plot.pdf", plot, width = 8, height = 6)
+
+
+# ggpubr
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+
+# Read in the data
+df <- read.csv("/Users/valter/Downloads/Kraken2/alpha_diversity_Uganda_1.csv", header = TRUE)
+
+# Define the order of the groups
+group_order <- c("Wild_gorilla", "Habituated_gorilla", "Human_hospital", "Human_community", "Cattle", "Goat")
+
+# Reorder the levels of the Group variable
+df$Group <- factor(df$Group, levels = group_order)
+
+# Define colours for the boxplot and points
+my_colors <- c("#38761d", "#d9ead3", "#3d85c6", "#cfe2f3", "#f6b26b", "#ffd966")
+
+# Create facet grid using ggpubr
+plot <- ggplot(df, aes(x = Group, y = Alpha_diversity, fill = Group)) +
+  geom_boxplot(alpha = 0.8, colour = "black") +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  scale_fill_manual(values = my_colors) +
+  theme_classic() +
+  labs(y = "Shannon's diversity") +
+  facet_grid(. ~ Group) +
+  theme(panel.spacing.x = unit(1, "lines"),
+        plot.margin = margin(5, 5, 5, 5),
+        axis.title.y = element_text(size = 20))
+
+# Perform statistical comparisons
+comparisons <- list(
+  c("Wild_gorilla", "Habituated_gorilla"),
+  c("Wild_gorilla", "Human_hospital"),
+  c("Wild_gorilla", "Human_community"),
+  c("Wild_gorilla", "Cattle"),
+  c("Wild_gorilla", "Goat")
+)
+
+# Filter groups with sufficient observations
+filtered_comparisons <- lapply(comparisons, function(c) {
+  group1 <- c[1]
+  group2 <- c[2]
+  n_group1 <- sum(df$Group == group1, na.rm = TRUE)
+  n_group2 <- sum(df$Group == group2, na.rm = TRUE)
+  if (n_group1 > 1 && n_group2 > 1) {
+    c
+  } else {
+    NULL
+  }
+})
+
+# Remove NULL values
+filtered_comparisons <- filtered_comparisons[!sapply(filtered_comparisons, is.null)]
+
+# Perform statistical tests and add labels
+plot_with_stats <- plot +
+  stat_compare_means(comparisons = filtered_comparisons, label = "p.signif")
+
+# Display the plot
+print(plot_with_stats)
+
+
+
+#TEST Rain - cloud
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(ggridges)
+
+# Read in the data
+df <- read.csv("/Users/valter/Downloads/Kraken2/alpha_diversity_Uganda_1.csv", header = TRUE)
+
+# Define the order of the groups
+group_order <- c("Wild_gorilla", "Habituated_gorilla", "Human_hospital", "Human_community", "Cattle", "Goat")
+
+# Reorder the levels of the Group variable
+df$Group <- factor(df$Group, levels = group_order)
+
+# Define colours for the raincloud-like plot
+my_colors <- c("#38761d", "#d9ead3", "#3d85c6", "#cfe2f3", "#f6b26b", "#ffd966")
+
+# Create the raincloud-like plot using ggplot2 and ggridges
+ggplot(df, aes(x = Alpha_diversity, y = Group, fill = Group)) +
+  geom_density_ridges(alpha = 0.6, rel_min_height = 0.01, colors = my_colors) +
+  geom_point(position = position_jitterdodge(), size = 2, shape = 21, color = "black", stroke = 0.5) +
+  scale_fill_manual(values = my_colors) +
+  theme_minimal() +
+  labs(x = "Shannon's diversity", y = NULL) +
+  scale_y_discrete(labels = NULL)
+
+
+#Test 3
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(ggridges)
+
+# Read in the data
+df <- read.csv("/Users/valter/Downloads/Kraken2/alpha_diversity_Uganda_1.csv", header = TRUE)
+
+# Define the order of the groups
+group_order <- c("Wild_gorilla", "Habituated_gorilla", "Human_hospital", "Human_community", "Cattle", "Goat")
+
+# Reorder the levels of the Group variable
+df$Group <- factor(df$Group, levels = group_order)
+
+# Define colours for the raincloud-like plot
+my_colors <- c("#38761d", "#d9ead3", "#3d85c6", "#cfe2f3", "#f6b26b", "#ffd966")
+
+# Create the raincloud-like plot using ggplot2 and ggridges
+ggplot(df, aes(x = Alpha_diversity, y = Group, fill = Group)) +
+  geom_density_ridges(alpha = 0.6, rel_min_height = 0.01, colors = my_colors) +
+  geom_point(position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.8),
+             size = 2, shape = 21, color = "black", stroke = 0.5) +
+  scale_fill_manual(values = my_colors) +
+  theme_minimal() +
+  labs(x = "Shannon's diversity", y = NULL) +
+  scale_y_discrete(labels = NULL)
+
+# TEST 5 - PERFECT!!!!!!
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(ggridges)
+
+# Read in the data
+df <- read.csv("/Users/valter/Downloads/Kraken2/alpha_diversity_Uganda_1.csv", header = TRUE)
+
+# Define the order of the groups
+group_order <- c("Wild_gorilla", "Habituated_gorilla", "Human_hospital", "Human_community", "Cattle", "Goat")
+
+# Reorder the levels of the Group variable
+df$Group <- factor(df$Group, levels = group_order)
+
+# Define colours for the raincloud-like plot
+my_colors <- c("#38761d", "#d9ead3", "#3d85c6", "#cfe2f3", "#f6b26b", "#ffd966")
+
+# Create the raincloud-like plot using ggplot2 and ggridges
+ggplot(df, aes(x = Alpha_diversity, y = Group, fill = Group)) +
+  geom_density_ridges(alpha = 0.6, rel_min_height = 0.01, colors = my_colors) +
+  geom_point(position = position_jitterdodge(jitter.width = 0.2, jitter.height = 0.2, dodge.width = 0.8),
+             size = 2, shape = 21, color = "black", stroke = 0.5) +
+  scale_fill_manual(values = my_colors) +
+  theme_minimal() +
+  labs(x = "Shannon's diversity", y = NULL) +
+  scale_y_discrete(labels = NULL)
+
+
+# Editing font sizes:
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(ggridges)
+
+# Read in the data
+df <- read.csv("/Users/valter/Downloads/Kraken2/alpha_diversity_Uganda_1.csv", header = TRUE)
+
+# Define the order of the groups
+group_order <- c("Wild_gorilla", "Habituated_gorilla", "Human_hospital", "Human_community", "Cattle", "Goat")
+
+# Reorder the levels of the Group variable
+df$Group <- factor(df$Group, levels = group_order)
+
+# Define colours for the raincloud-like plot
+my_colors <- c("#38761d", "#d9ead3", "#3d85c6", "#cfe2f3", "#f6b26b", "#ffd966")
+
+# Create the raincloud-like plot using ggplot2 and ggridges
+ggplot(df, aes(x = Alpha_diversity, y = Group, fill = Group)) +
+  geom_density_ridges(alpha = 0.6, rel_min_height = 0.01, colors = my_colors) +
+  geom_point(position = position_jitterdodge(jitter.width = 0.2, jitter.height = 0.2, dodge.width = 0.8),
+             size = 2, shape = 21, color = "black", stroke = 0.5) +
+  scale_fill_manual(values = my_colors) +
+  theme_minimal() +
+  labs(x = "Shannon's diversity", y = NULL) +
+  scale_y_discrete(labels = NULL) +
+  theme(axis.text = element_text(size = 12),      # Adjust axis text size
+        axis.title = element_text(size = 14),     # Adjust axis title size
+        legend.text = element_text(size = 12))    # Adjust legend text size
+
+
+#Boxplot TEST
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(ggridges)
+
+# Read in the data
+df <- read.csv("/Users/valter/Downloads/Kraken2/alpha_diversity_Uganda_1.csv", header = TRUE)
+
+# Define the order of the groups
+group_order <- c("Wild_gorilla", "Habituated_gorilla", "Human_hospital", "Human_community", "Cattle", "Goat")
+
+# Reorder the levels of the Group variable
+df$Group <- factor(df$Group, levels = group_order)
+
+# Define colours for the raincloud-like plot
+my_colors <- c("#38761d", "#d9ead3", "#3d85c6", "#cfe2f3", "#f6b26b", "#ffd966")
+
+# Create the raincloud-like plot using ggplot2 and ggridges
+ggplot(df, aes(x = Alpha_diversity, y = Group, fill = Group)) +
+  geom_density_ridges(alpha = 0.6, rel_min_height = 0.01, colors = my_colors) +
+  geom_boxplot(data = df, aes(x = Alpha_diversity, y = Group, fill = Group),
+               width = 0.15, outlier.shape = NA) +
+  geom_point(position = position_jitterdodge(jitter.width = 0.2, jitter.height = 0.2, dodge.width = 0.8),
+             size = 2, shape = 21, color = "black", stroke = 0.5) +
+  scale_fill_manual(values = my_colors) +
+  theme_minimal() +
+  labs(x = "Shannon's diversity", y = NULL) +
+  scale_y_discrete(labels = NULL) +
+  theme(axis.text = element_text(size = 12),      # Adjust axis text size
+        axis.title = element_text(size = 14),     # Adjust axis title size
+        legend.text = element_text(size = 12))    # Adjust legend text size
+
+#Another test
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(ggridges)
+
+# Read in the data
+df <- read.csv("/Users/valter/Downloads/Kraken2/alpha_diversity_Uganda_1.csv", header = TRUE)
+
+# Define the order of the groups
+group_order <- c("Wild_gorilla", "Habituated_gorilla", "Human_hospital", "Human_community", "Cattle", "Goat")
+
+# Reorder the levels of the Group variable
+df$Group <- factor(df$Group, levels = group_order)
+
+# Define colours for the raincloud-like plot
+my_colors <- c("#38761d", "#d9ead3", "#3d85c6", "#cfe2f3", "#f6b26b", "#ffd966")
+
+# Create the raincloud-like plot using ggplot2 and ggridges
+ggplot(df, aes(x = Alpha_diversity, y = Group, fill = Group)) +
+  geom_density_ridges(alpha = 0.6, rel_min_height = 0.01, colors = my_colors) +
+  geom_boxplot(data = df, aes(x = Alpha_diversity, y = Group, fill = Group),
+               width = 0.15, outlier.shape = NA,
+               position = position_dodge(height = 0.2)) +  # Adjust the height value as needed
+  geom_point(position = position_jitterdodge(jitter.width = 0.2, jitter.height = 0.2, dodge.width = 0.8),
+             size = 2, shape = 21, color = "black", stroke = 0.5) +
+  scale_fill_manual(values = my_colors) +
+  theme_minimal() +
+  labs(x = "Shannon's diversity", y = NULL) +
+  scale_y_discrete(labels = NULL) +
+  theme(axis.text = element_text(size = 12),      # Adjust axis text size
+        axis.title = element_text(size = 14),     # Adjust axis title size
+        legend.text = element_text(size = 12))    # Adjust legend text size
